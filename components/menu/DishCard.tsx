@@ -15,7 +15,7 @@ export function DishCard({ dish, locale }: { dish: LocalizedDish; locale: Locale
           {dish.name}
           {hasOptions && dish.isAvailable && (
             <span className="rounded-md bg-gold/15 px-1.5 py-0.5 text-[10px] font-semibold text-gold">
-              {hasOptions ? `${dish.optionGroups[0].name}` : ''}
+              {dish.optionGroups[0].name}
             </span>
           )}
           {!dish.isAvailable && (
