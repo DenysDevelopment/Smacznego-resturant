@@ -16,4 +16,12 @@ describe('formatZloty', () => {
     expect(s).toContain('28,00')
     expect(s).toContain('zł')
   })
+  it('always renders zł (not PLN) for ru and uk', () => {
+    for (const loc of ['ru', 'uk'] as const) {
+      const s = formatZloty(2800, loc)
+      expect(s).toContain('28,00')
+      expect(s).toContain('zł')
+      expect(s).not.toContain('PLN')
+    }
+  })
 })
