@@ -14,12 +14,12 @@ export function DishCard({ dish, locale }: { dish: LocalizedDish; locale: Locale
         <h3 className="flex flex-wrap items-center gap-2 text-sm">
           {dish.name}
           {hasOptions && dish.isAvailable && (
-            <span className="rounded-md bg-[rgba(224,164,74,0.15)] px-1.5 py-0.5 text-[10px] font-semibold text-gold">
+            <span className="rounded-md bg-gold/15 px-1.5 py-0.5 text-[10px] font-semibold text-gold">
               {hasOptions ? `${dish.optionGroups[0].name}` : ''}
             </span>
           )}
           {!dish.isAvailable && (
-            <span className="rounded-md bg-[rgba(229,72,77,0.15)] px-1.5 py-0.5 text-[10px] font-semibold text-danger">
+            <span className="rounded-md bg-danger/15 px-1.5 py-0.5 text-[10px] font-semibold text-danger">
               {t('soldOut')}
             </span>
           )}
@@ -33,7 +33,7 @@ export function DishCard({ dish, locale }: { dish: LocalizedDish; locale: Locale
             type="button"
             aria-label="add"
             disabled={!dish.isAvailable}
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold text-[#241704] disabled:bg-[#3a332a] disabled:text-[#7a7266]"
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold text-espresso disabled:bg-surface disabled:text-muted"
           >
             <Icon name="plus" size={15} />
           </button>
