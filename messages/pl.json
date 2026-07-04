@@ -1,4 +1,11 @@
 {
-  "nav": { "menu": "Menu", "about": "O nas", "delivery": "Dostawa", "contact": "Kontakt" },
-  "menu": { "search": "Znajdź danie…", "soldOut": "Brak w sprzedaży", "from": "od" }
+  "nav": { "menu": "Menu", "about": "O nas", "delivery": "Dostawa", "contact": "Kontakt", "language": "Język" },
+  "menu": { "search": "Znajdź danie…", "soldOut": "Brak w sprzedaży", "from": "od" },
+  "home": {
+    "status": "Otwarte do 22:00 · dostawa ~40 min",
+    "title": "Domowa kuchnia,",
+    "titleAccent": "bez pośpiechu",
+    "subcopy": "Barszcz, pierogi, domowe kotlety — gotujemy naprawdę i dowozimy ciepłe pod Twoje drzwi.",
+    "cta": "Zamów dostawę"
+  }
 }

@@ -18,7 +18,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         <Link href={`/${locale}#contact`}>{t('contact')}</Link>
       </nav>
       <div className="flex items-center gap-2.5 text-muted">
-        <LanguageSwitcher current={locale} />
+        <LanguageSwitcher current={locale} label={t('language')} />
         <span className="flex items-center gap-1.5 rounded-full bg-gold px-3 py-1.5 font-bold text-espresso">
           <Icon name="cart" size={15} />0
         </span>

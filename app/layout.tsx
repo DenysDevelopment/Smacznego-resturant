@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { serif, sans } from '@/lib/fonts'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -8,9 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="pl" className={`${serif.variable} ${sans.variable}`}>
-      <body>{children}</body>
-    </html>
-  )
+  return children
 }

@@ -3,7 +3,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { LOCALES, type Locale } from '@/i18n/config'
 import { Icon } from '@/components/Icon'
 
-export function LanguageSwitcher({ current }: { current: Locale }) {
+export function LanguageSwitcher({ current, label }: { current: Locale; label?: string }) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -17,7 +17,12 @@ export function LanguageSwitcher({ current }: { current: Locale }) {
   return (
     <label className="flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-xs text-muted">
       <Icon name="globe" size={13} />
-      <select value={current} onChange={onChange} className="bg-transparent uppercase outline-none">
+      <select
+        value={current}
+        onChange={onChange}
+        aria-label={label ?? 'Language'}
+        className="bg-transparent uppercase outline-none"
+      >
         {LOCALES.map((l) => (
           <option key={l} value={l} className="text-black">
             {l}
