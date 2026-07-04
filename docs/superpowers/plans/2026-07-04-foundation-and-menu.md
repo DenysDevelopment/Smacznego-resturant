@@ -130,9 +130,11 @@ git commit -m "chore: scaffold Next.js + Tailwind + Vitest"
 Create `lib/fonts.ts`:
 
 ```ts
-import { Fraunces, Inter } from 'next/font/google'
+import { Playfair_Display, Inter } from 'next/font/google'
 
-export const serif = Fraunces({
+// Playfair Display supports latin, latin-ext AND cyrillic — required for uk/ru
+// headings. (Fraunces has no cyrillic subset and would fail the build.)
+export const serif = Playfair_Display({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
   variable: '--font-serif',
   display: 'swap',
