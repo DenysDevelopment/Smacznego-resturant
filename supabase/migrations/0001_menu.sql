@@ -68,3 +68,6 @@ create policy "public read" on option_groups for select using (true);
 create policy "public read" on options for select using (true);
 create policy "public read" on combos for select using (true);
 create policy "public read" on combo_items for select using (true);
+
+-- Public read requires table-level SELECT grants in addition to the RLS policies above.
+grant select on categories, dishes, option_groups, options, combos, combo_items to anon, authenticated;
