@@ -1,0 +1,4 @@
+{
+  "nav": { "menu": "Menu", "about": "O nas", "delivery": "Dostawa", "contact": "Kontakt" },
+  "menu": { "search": "Znajdź danie…", "soldOut": "Brak w sprzedaży", "from": "od" }
+}
