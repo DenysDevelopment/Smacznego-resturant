@@ -20,4 +20,10 @@ describe('isValidPlPhone', () => {
     expect(isValidPlPhone('50010020a')).toBe(false)
     expect(isValidPlPhone('')).toBe(false)
   })
+  it('does not mangle a bare 9-digit number that starts with 48', () => {
+    expect(isValidPlPhone('485001002')).toBe(true)
+  })
+  it('rejects an over-length stacked prefix', () => {
+    expect(isValidPlPhone('048500100200')).toBe(false)
+  })
 })
