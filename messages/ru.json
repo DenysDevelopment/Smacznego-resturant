@@ -2,6 +2,7 @@
   "nav": { "menu": "Меню", "about": "О нас", "delivery": "Доставка", "contact": "Контакты", "language": "Язык" },
   "menu": { "search": "Найти блюдо…", "soldOut": "Нет в наличии", "from": "от" },
   "cart": { "add": "Добавить", "addToCart": "В корзину", "choose": "Выберите", "qty": "Количество", "total": "Итого", "required": "обязательно", "empty": "Корзина пуста", "subtotal": "Сумма", "toFree": "до бесплатной доставки", "checkout": "Заказать", "minOrder": "Мин. заказ", "remove": "Удалить" },
+  "checkout": { "street": "Улица", "building": "Дом", "apartment": "Квартира", "floor": "Этаж", "entrance": "Подъезд", "intercom": "Домофон" },
   "home": {
     "status": "Открыто до 22:00 · доставка ~40 мин",
     "title": "Домашняя кухня,",
