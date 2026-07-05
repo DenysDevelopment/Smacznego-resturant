@@ -33,3 +33,10 @@ insert into options (option_group_id, name, price_delta, sort)
 select id, '{"pl":"300 ml","uk":"300 мл","ru":"300 мл"}'::jsonb, 0, 1 from g
 union all
 select id, '{"pl":"500 ml","uk":"500 мл","ru":"500 мл"}'::jsonb, 700, 2 from g;
+
+insert into restaurant_settings (id, name, phone, address_text, lat, lng, delivery_radius_m,
+  delivery_fee, free_delivery_threshold, min_order, hours, prep_lead_minutes)
+values (true, 'Smacznego', '+48 500 100 200', 'ul. Przykładowa 1, Warszawa',
+  52.2297, 21.0122, 8000, 800, 6000, 3000,
+  '{"mon":{"open":"11:00","close":"22:00"},"tue":{"open":"11:00","close":"22:00"},"wed":{"open":"11:00","close":"22:00"},"thu":{"open":"11:00","close":"22:00"},"fri":{"open":"11:00","close":"23:00"},"sat":{"open":"12:00","close":"23:00"},"sun":{"open":"12:00","close":"21:00"}}'::jsonb,
+  40);
