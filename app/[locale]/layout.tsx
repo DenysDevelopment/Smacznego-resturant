@@ -5,6 +5,7 @@ import { LOCALES, type Locale } from '@/i18n/config'
 import { serif, sans } from '@/lib/fonts'
 import { getSettings } from '@/lib/settings/getSettings'
 import { SettingsProvider } from '@/components/SettingsProvider'
+import { CartProvider } from '@/components/CartProvider'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
@@ -26,7 +27,9 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${serif.variable} ${sans.variable}`}>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <SettingsProvider value={settings}>{children}</SettingsProvider>
+          <SettingsProvider value={settings}>
+            <CartProvider>{children}</CartProvider>
+          </SettingsProvider>
         </NextIntlClientProvider>
       </body>
     </html>
