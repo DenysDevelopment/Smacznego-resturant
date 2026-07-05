@@ -33,7 +33,7 @@ export function CartView({ locale }: { locale: Locale }) {
                 <button aria-label="dec" className="h-7 w-7 rounded-lg border border-line" onClick={() => setQty(key, i.qty - 1)}>−</button>
                 <span className="w-5 text-center text-sm">{i.qty}</span>
                 <button aria-label="inc" className="h-7 w-7 rounded-lg border border-line" onClick={() => setQty(key, i.qty + 1)}>+</button>
-                <button aria-label={t('remove')} className="ml-2 text-muted" onClick={() => removeItem(key)}><Icon name="receipt" size={14} /></button>
+                <button aria-label={t('remove')} className="ml-2 text-muted" onClick={() => removeItem(key)}><Icon name="trash" size={14} /></button>
               </div>
             </div>
             <span className="text-sm font-bold text-gold">{formatZloty(i.unitPrice * i.qty, locale)}</span>
