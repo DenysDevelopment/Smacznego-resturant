@@ -3,6 +3,8 @@ import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { LOCALES, type Locale } from '@/i18n/config'
 import { serif, sans } from '@/lib/fonts'
+import { getSettings } from '@/lib/settings/getSettings'
+import { SettingsProvider } from '@/components/SettingsProvider'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
@@ -19,10 +21,13 @@ export default async function LocaleLayout({
   if (!(LOCALES as readonly string[]).includes(locale)) notFound()
   setRequestLocale(locale as Locale)
   const messages = await getMessages()
+  const settings = await getSettings()
   return (
     <html lang={locale} className={`${serif.variable} ${sans.variable}`}>
       <body>
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          <SettingsProvider value={settings}>{children}</SettingsProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )
