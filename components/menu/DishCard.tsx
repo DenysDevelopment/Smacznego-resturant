@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
-import { Icon } from '@/components/Icon'
 import { formatZloty } from '@/lib/menu/price'
+import { AddToCartButton } from './AddToCartButton'
 import type { LocalizedDish } from '@/lib/menu/types'
 import type { Locale } from '@/i18n/config'
 
@@ -29,14 +29,7 @@ export function DishCard({ dish, locale }: { dish: LocalizedDish; locale: Locale
           <span className="text-sm font-bold text-gold">
             {hasOptions ? `${t('from')} ` : ''}{formatZloty(dish.basePrice, locale)}
           </span>
-          <button
-            type="button"
-            aria-label="add"
-            disabled={!dish.isAvailable}
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold text-espresso disabled:bg-surface disabled:text-muted"
-          >
-            <Icon name="plus" size={15} />
-          </button>
+          <AddToCartButton dish={dish} locale={locale} />
         </div>
       </div>
     </article>
