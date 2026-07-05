@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { Icon } from '@/components/Icon'
+import { CartBadge } from '@/components/cart/CartBadge'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import type { Locale } from '@/i18n/config'
 
@@ -19,9 +19,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       </nav>
       <div className="flex items-center gap-2.5 text-muted">
         <LanguageSwitcher current={locale} label={t('language')} />
-        <span className="flex items-center gap-1.5 rounded-full bg-gold px-3 py-1.5 font-bold text-espresso">
-          <Icon name="cart" size={15} />0
-        </span>
+        <CartBadge locale={locale} />
       </div>
     </header>
   )

@@ -1,7 +1,7 @@
 {
   "nav": { "menu": "Menu", "about": "O nas", "delivery": "Dostawa", "contact": "Kontakt", "language": "Język" },
   "menu": { "search": "Znajdź danie…", "soldOut": "Brak w sprzedaży", "from": "od" },
-  "cart": { "add": "Dodaj", "addToCart": "Do koszyka", "choose": "Wybierz", "qty": "Ilość", "total": "Razem", "required": "wymagane" },
+  "cart": { "add": "Dodaj", "addToCart": "Do koszyka", "choose": "Wybierz", "qty": "Ilość", "total": "Razem", "required": "wymagane", "empty": "Koszyk jest pusty", "subtotal": "Suma", "toFree": "do darmowej dostawy", "checkout": "Zamów", "minOrder": "Min. zamówienie", "remove": "Usuń" },
   "home": {
     "status": "Otwarte do 22:00 · dostawa ~40 min",
     "title": "Domowa kuchnia,",
