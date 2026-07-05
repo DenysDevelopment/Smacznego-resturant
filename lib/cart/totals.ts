@@ -1,5 +1,6 @@
 import type { Cart, CartItem } from './types'
 
+/** Line total: unitPrice is already fully resolved (includes selected options), so multiply by qty only. */
 export function lineTotal(item: CartItem): number {
   return item.unitPrice * item.qty
 }
