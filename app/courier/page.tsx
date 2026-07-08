@@ -1,5 +1,6 @@
 import { listCourierQueue } from '@/lib/orders/adminOrders'
 import { CourierCard } from '@/components/courier/CourierCard'
+import { OrderStream } from '@/components/admin/OrderStream'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,6 +12,7 @@ export default async function CourierPage() {
     <main className="mx-auto max-w-lg px-4 py-6">
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-2xl font-extrabold">Курьер</h1>
+        <OrderStream role="courier" />
       </div>
       <section>
         <h2 className="mb-2 text-sm font-bold uppercase tracking-widest text-muted">К доставке ({ready.length})</h2>
