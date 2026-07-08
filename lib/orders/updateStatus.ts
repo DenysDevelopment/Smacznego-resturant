@@ -10,6 +10,8 @@ export async function updateOrderStatus(
   to: OrderStatus,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const session = await getSession()
+  if (!session) return { ok: false, error: 'unauthorized' }
+
   const admin = createAdminClient()
   const { data: order, error: loadErr } = await admin
     .from('orders').select('type, status').eq('id', orderId).single()
