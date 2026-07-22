@@ -1,5 +1,7 @@
 import 'server-only'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { hasRole } from '@/lib/auth/require'
+import { warsawStartOfDayUtc } from '@/lib/time/warsaw'
 import type { OrderStatus, OrderType } from './statusFlow'
 
 export interface AdminOrderItem {
@@ -27,8 +29,11 @@ const TERMINAL: OrderStatus[] = ['delivered', 'picked_up', 'cancelled', 'rejecte
  * comma-containing `in.(...)` list (commas collide with the or-parser).
  */
 export async function listActiveOrders(): Promise<AdminOrder[]> {
+  // defense in depth: pages redirect via requireRole, this is the backstop
+  if (!(await hasRole('staff'))) throw new Error('unauthorized')
   const admin = createAdminClient()
-  const startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0)
+  // "Завершены" shows only today's finished orders and resets at 00:00 Warsaw
+  const startOfDay = warsawStartOfDayUtc(new Date())
 
   const [active, todayDone] = await Promise.all([
     admin.from('orders').select(SELECT_COLUMNS)
@@ -49,7 +54,72 @@ export async function listActiveOrders(): Promise<AdminOrder[]> {
   return [...byId.values()].sort((a, b) => b.created_at.localeCompare(a.created_at))
 }
 
+export interface OrderLogRow {
+  id: string
+  public_token: string
+  status: OrderStatus
+  type: OrderType
+  customer_name: string
+  customer_phone: string
+  total: number
+  created_at: string           // placed
+  accepted_at: string | null   // first time it was accepted (confirmed)
+  finished_at: string | null   // delivered / picked up time
+  delivered: boolean           // finished successfully vs cancelled/rejected/in-progress
+}
+
+/**
+ * Full order history for /admin/logs, newest first, capped at 500.
+ * `from`/`to` are UTC ISO instants (half-open [from, to)). Accepted/finished
+ * times come from the order_events audit log (null for pre-log orders).
+ */
+export async function listOrderLog(filter?: { from?: string; to?: string }): Promise<OrderLogRow[]> {
+  if (!(await hasRole('staff'))) throw new Error('unauthorized')
+  const admin = createAdminClient()
+
+  let q = admin
+    .from('orders')
+    .select('id, public_token, status, type, customer_name, customer_phone, total, created_at')
+    .order('created_at', { ascending: false })
+    .limit(500)
+  if (filter?.from) q = q.gte('created_at', filter.from)
+  if (filter?.to) q = q.lt('created_at', filter.to)
+  const { data: orders, error } = await q
+  if (error) throw new Error(`listOrderLog: ${error.message}`)
+
+  const ids = (orders ?? []).map((o) => o.id)
+  const events = ids.length
+    ? (await admin.from('order_events').select('order_id, status, created_at').in('order_id', ids)).data ?? []
+    : []
+
+  const earliest = (map: Map<string, string>, orderId: string, at: string) => {
+    const cur = map.get(orderId)
+    if (!cur || at < cur) map.set(orderId, at)
+  }
+  const acceptedAt = new Map<string, string>()
+  const finishedAt = new Map<string, string>()
+  for (const e of events) {
+    if (e.status === 'confirmed') earliest(acceptedAt, e.order_id, e.created_at)
+    if (e.status === 'delivered' || e.status === 'picked_up') earliest(finishedAt, e.order_id, e.created_at)
+  }
+
+  return (orders ?? []).map((o) => ({
+    id: o.id,
+    public_token: o.public_token,
+    status: o.status as OrderStatus,
+    type: o.type as OrderType,
+    customer_name: o.customer_name,
+    customer_phone: o.customer_phone,
+    total: o.total,
+    created_at: o.created_at,
+    accepted_at: acceptedAt.get(o.id) ?? null,
+    finished_at: finishedAt.get(o.id) ?? null,
+    delivered: o.status === 'delivered' || o.status === 'picked_up',
+  }))
+}
+
 export async function listCourierQueue(): Promise<AdminOrder[]> {
+  if (!(await hasRole('courier'))) throw new Error('unauthorized')
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('orders')

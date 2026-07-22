@@ -16,7 +16,9 @@ export function LoginForm({ role, redirectTo }: { role: Role; redirectTo: string
     start(async () => {
       const res = await login(role, code)
       if (res.ok) router.replace(redirectTo)
-      else setError(res.error === 'not_configured' ? 'Не настроено (нет AUTH_SECRET/кода)' : 'Неверный код')
+      else if (res.error === 'not_configured') setError('Не настроено (нет AUTH_SECRET/кода)')
+      else if (res.error === 'rate_limited') setError('Слишком много попыток — подождите 15 минут')
+      else setError('Неверный код')
     })
   }
 

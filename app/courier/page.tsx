@@ -1,10 +1,12 @@
 import { listCourierQueue } from '@/lib/orders/adminOrders'
+import { requireRole } from '@/lib/auth/require'
 import { CourierCard } from '@/components/courier/CourierCard'
 import { OrderStream } from '@/components/admin/OrderStream'
 
 export const dynamic = 'force-dynamic'
 
 export default async function CourierPage() {
+  await requireRole('courier')
   const queue = await listCourierQueue()
   const ready = queue.filter((o) => o.status === 'ready')
   const enRoute = queue.filter((o) => o.status === 'out_for_delivery')

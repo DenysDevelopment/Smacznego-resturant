@@ -1,6 +1,6 @@
 -- ===== Menu (real dishes, real photos in /public/dishes) =====
 insert into categories (name, sort) values
-  ('{"pl":"Wareniki i pierogi","uk":"Вареники та пироги","ru":"Вареники и пироги"}'::jsonb, 1),
+  ('{"pl":"Wareniki i pierogi","uk":"Вареники","ru":"Вареники"}'::jsonb, 1),
   ('{"pl":"Pielmieni","uk":"Пельмені","ru":"Пельмени"}'::jsonb, 2),
   ('{"pl":"Kotlety i mięso","uk":"Котлети та м''ясо","ru":"Котлеты и мясо"}'::jsonb, 3),
   ('{"pl":"Naleśniki","uk":"Налисники","ru":"Блины"}'::jsonb, 4),
@@ -19,11 +19,11 @@ union all select (select id from categories where sort = 1),
   '{"pl":"12 szt., ze skwarkami","uk":"12 шт., зі шкварками","ru":"12 шт., со шкварками"}'::jsonb,
   2400, '/dishes/dish-04.webp', true, 2
 union all select (select id from categories where sort = 1),
-  '{"pl":"Pierogi z kapustą i grzybami","uk":"Пироги з капустою та грибами","ru":"Пироги с капустой и грибами"}'::jsonb,
+  '{"pl":"Pierogi z kapustą i grzybami","uk":"Вареники з капустою та грибами","ru":"Вареники с капустой и грибами"}'::jsonb,
   '{"pl":"Smażone, z podsmażoną cebulką","uk":"Смажені, з підсмаженою цибулькою","ru":"Жареные, с обжаренным луком"}'::jsonb,
   2600, '/dishes/dish-15.webp', true, 3
 union all select (select id from categories where sort = 1),
-  '{"pl":"Pierogi z mięsem","uk":"Пироги з м''ясом","ru":"Пироги с мясом"}'::jsonb,
+  '{"pl":"Pierogi z mięsem","uk":"Вареники з м''ясом","ru":"Вареники с мясом"}'::jsonb,
   '{"pl":"Z wołowiną i podsmażaną cebulką","uk":"З яловичиною та підсмаженою цибулькою","ru":"С говядиной и обжаренным луком"}'::jsonb,
   2800, '/dishes/dish-20.webp', true, 4
 union all select (select id from categories where sort = 1),
@@ -115,11 +115,11 @@ union all select (select id from categories where sort = 5),
   '{"pl":"Chrupiąca, z ziemniakami","uk":"Хрустка, з картоплею","ru":"Хрустящая, с картофелем"}'::jsonb,
   3400, '/dishes/dish-29.webp', true, 2
 union all select (select id from categories where sort = 5),
-  '{"pl":"Smażony karp","uk":"Смажений карась","ru":"Жареный карась"}'::jsonb,
+  '{"pl":"Smażony karp","uk":"Смажений короп","ru":"Жареный карп"}'::jsonb,
   '{"pl":"Cały, smażony, z cytryną","uk":"Цілий, смажений, з лимоном","ru":"Целый, жареный, с лимоном"}'::jsonb,
   4200, '/dishes/dish-19.webp', true, 3
 union all select (select id from categories where sort = 5),
-  '{"pl":"Filet z dorsza panierowany","uk":"Філе тріски панірований","ru":"Филе трески панированное"}'::jsonb,
+  '{"pl":"Filet z dorsza panierowany","uk":"Філе тріски паніроване","ru":"Филе трески панированное"}'::jsonb,
   '{"pl":"Z gotowanymi ziemniakami i surówką","uk":"З вареною картоплею та салатом","ru":"С варёным картофелем и салатом"}'::jsonb,
   3600, '/dishes/dish-25.webp', true, 4
 

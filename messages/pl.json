@@ -42,6 +42,8 @@
     "errors": {
       "below_min_order": "Kwota zamówienia jest poniżej minimum.",
       "closed": "Restauracja jest teraz zamknięta — wybierz późniejszą godzinę.",
+      "rate_limited": "Zbyt wiele zamówień z rzędu — spróbuj za kilka minut.",
+      "bad_schedule": "Wybrana godzina jest niedostępna — wybierz inną.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie."
     }
   },
@@ -50,7 +52,31 @@
     "confirmedSub": "Wkrótce zadzwonimy, aby potwierdzić szczegóły i czas dostawy.",
     "number": "Numer zamówienia",
     "statusPending": "Oczekuje na potwierdzenie",
-    "backToMenu": "Wróć do menu"
+    "backToMenu": "Wróć do menu",
+    "track": "Moje zamówienie",
+    "liveNote": "Status aktualizuje się automatycznie",
+    "progressTitle": "Status zamówienia",
+    "status": {
+      "pending": "Oczekuje na potwierdzenie",
+      "confirmed": "Potwierdzone",
+      "preparing": "W przygotowaniu",
+      "ready": "Gotowe",
+      "out_for_delivery": "Kurier w drodze",
+      "delivered": "Dostarczone",
+      "picked_up": "Odebrane",
+      "cancelled": "Zamówienie anulowane",
+      "rejected": "Zamówienie odrzucone"
+    },
+    "menu": {
+      "title": "Zamówienia",
+      "current": "Bieżące zamówienie",
+      "history": "Historia zamówień",
+      "empty": "Brak zamówień",
+      "track": "Śledź",
+      "open": "Otwórz",
+      "repeat": "Powtórz",
+      "repeatUnavailable": "Dania niedostępne"
+    }
   },
   "home": {
     "status": "Otwarte do 22:00 · dostawa ~40 min",

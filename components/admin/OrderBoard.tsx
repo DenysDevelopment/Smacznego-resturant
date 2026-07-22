@@ -1,17 +1,21 @@
 import { OrderCard } from './OrderCard'
+import { CompletedTimer } from './CompletedTimer'
+import { warsawNextMidnightUtc, warsawGmtLabel } from '@/lib/time/warsaw'
 import type { AdminOrder } from '@/lib/orders/adminOrders'
 import type { OrderStatus } from '@/lib/orders/statusFlow'
 
-const LANES: { title: string; statuses: OrderStatus[] }[] = [
+const LANES: { title: string; statuses: OrderStatus[]; resetsDaily?: boolean }[] = [
   { title: 'Новые', statuses: ['pending'] },
   { title: 'Приняты', statuses: ['confirmed'] },
   { title: 'Готовятся', statuses: ['preparing'] },
   { title: 'Готовы', statuses: ['ready'] },
   { title: 'В доставке', statuses: ['out_for_delivery'] },
-  { title: 'Завершены', statuses: ['delivered', 'picked_up', 'cancelled', 'rejected'] },
+  { title: 'Завершены', statuses: ['delivered', 'picked_up', 'cancelled', 'rejected'], resetsDaily: true },
 ]
 
 export function OrderBoard({ orders }: { orders: AdminOrder[] }) {
+  const nextReset = warsawNextMidnightUtc(new Date()).toISOString()
+  const gmtLabel = warsawGmtLabel(new Date())
   return (
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
       {LANES.map((lane) => {
@@ -20,6 +24,7 @@ export function OrderBoard({ orders }: { orders: AdminOrder[] }) {
           <section key={lane.title}>
             <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted">
               {lane.title} <span className="rounded-full bg-line px-2 text-xs">{cards.length}</span>
+              {lane.resetsDaily && <CompletedTimer nextResetIso={nextReset} gmtLabel={gmtLabel} />}
             </h2>
             <div className="space-y-3">
               {cards.length === 0

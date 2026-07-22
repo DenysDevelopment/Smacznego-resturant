@@ -97,7 +97,7 @@ export function CheckoutForm({ locale }: { locale: Locale }) {
       return
     }
     setSubmitting(false)
-    const known = ['below_min_order', 'closed']
+    const known = ['below_min_order', 'closed', 'rate_limited', 'bad_schedule']
     setError(known.includes(res.error) ? t(`errors.${res.error}` as 'errors.closed') : t('errors.generic'))
   }
 

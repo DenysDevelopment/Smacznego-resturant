@@ -5,29 +5,63 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { formatZloty } from '@/lib/menu/price'
 import { Icon } from '@/components/Icon'
 import { SiteHeader } from '@/components/SiteHeader'
+import { OrderProgress } from '@/components/order/OrderProgress'
+import { OrderAutoRefresh } from '@/components/order/OrderAutoRefresh'
+import { RememberOrder } from '@/components/order/RememberOrder'
+import { RepeatOrderButton } from '@/components/order/RepeatOrderButton'
+import { orderProgress } from '@/lib/orders/progress'
+import { getFlags, flagEnabled } from '@/lib/content/flags'
+import type { OrderStatus, OrderType } from '@/lib/orders/statusFlow'
+import type { CartItem, SelectedOption } from '@/lib/cart/types'
 import type { Locale } from '@/i18n/config'
 
 interface SelOpt { optionName: string }
+
+const TERMINAL: OrderStatus[] = ['delivered', 'picked_up', 'cancelled', 'rejected']
+
+export const dynamic = 'force-dynamic'
 
 export default async function OrderPage({ params }: { params: Promise<{ locale: string; token: string }> }) {
   const { locale, token } = await params
   const loc = locale as Locale
   setRequestLocale(loc)
   const t = await getTranslations('order')
+  const ts = await getTranslations('order.status')
   const tc = await getTranslations('checkout')
 
   const admin = createAdminClient()
   const { data: order } = await admin
     .from('orders')
-    .select('*, order_items(name, unit_price, qty, selected_options, line_total)')
+    .select('*, order_items(dish_id, name, unit_price, qty, selected_options, line_total)')
     .eq('public_token', token)
     .single()
 
   if (!order) notFound()
 
+  const status = order.status as OrderStatus
+  const flags = await getFlags()
+  const hidden = new Set<OrderStatus>(
+    (['confirmed', 'preparing', 'ready', 'out_for_delivery'] as OrderStatus[]).filter(
+      (s) => !flagEnabled(flags, `step.${s}`),
+    ),
+  )
+  const progress = orderProgress(order.type as OrderType, status, hidden)
+  const active = !TERMINAL.includes(status)
+  const showSub = flagEnabled(flags, 'text.confirmedSub')
+  const showLiveNote = flagEnabled(flags, 'text.liveNote')
+  const statusLabel = (k: OrderStatus) => ts(k as 'pending')
+
   const items = (order.order_items ?? []) as {
-    name: string; unit_price: number; qty: number; selected_options: unknown; line_total: number
+    dish_id: string | null; name: string; unit_price: number; qty: number; selected_options: unknown; line_total: number
   }[]
+
+  const repeatItems: CartItem[] = items.map((i) => ({
+    dishId: i.dish_id ?? '',
+    name: i.name,
+    unitPrice: i.unit_price,
+    qty: i.qty,
+    selectedOptions: Array.isArray(i.selected_options) ? (i.selected_options as SelectedOption[]) : [],
+  }))
 
   return (
     <>
@@ -38,19 +72,30 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
             <Icon name="gift" size={30} />
           </span>
           <h1 className="mt-5 text-3xl font-extrabold tracking-tight sm:text-4xl">{t('confirmedTitle')}</h1>
-          <p className="mt-3 max-w-md text-base leading-relaxed text-ink/70">{t('confirmedSub')}</p>
+          {showSub && <p className="mt-3 max-w-md text-base leading-relaxed text-ink/70">{t('confirmedSub')}</p>}
           <p className="mt-4 rounded-full border border-line bg-panel px-4 py-1.5 text-sm font-semibold">
             {t('number')}: <span className="font-extrabold text-beet">#{token.slice(0, 8).toUpperCase()}</span>
           </p>
         </div>
 
+        {/* Live status */}
+        <RememberOrder token={token} />
+        <OrderAutoRefresh active={active} />
         <div className="mt-8 rounded-3xl border border-line bg-panel p-6">
+          <div className="mb-4 flex items-center justify-between border-b border-line pb-3">
+            <span className="text-sm font-bold uppercase tracking-widest text-muted">{t('progressTitle')}</span>
+            {active && showLiveNote && <span className="flex items-center gap-1.5 text-xs font-semibold text-herb"><span className="h-2 w-2 animate-pulse rounded-full bg-herb" />{t('liveNote')}</span>}
+          </div>
+          <OrderProgress progress={progress} label={statusLabel} />
+        </div>
+
+        <div className="mt-6 rounded-3xl border border-line bg-panel p-6">
           <div className="flex items-center justify-between border-b border-line pb-3">
             <span className="text-sm font-bold uppercase tracking-widest text-muted">
               {order.type === 'pickup' ? tc('pickup') : tc('delivery')}
             </span>
-            <span className="rounded-full bg-mustard/20 px-3 py-1 text-xs font-bold uppercase tracking-wide text-mustard">
-              {t('statusPending')}
+            <span className="rounded-full bg-panel px-3 py-1 text-xs font-bold uppercase tracking-wide text-beet ring-1 ring-beet/30">
+              {statusLabel(status)}
             </span>
           </div>
 
@@ -96,7 +141,9 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
           </p>
         </div>
 
-        <Link href={`/${loc}/menu`} className="mt-8 flex items-center justify-center rounded-2xl border-2 border-ink/85 px-4 py-3 text-sm font-bold text-ink transition-colors hover:bg-ink hover:text-paper">
+        <RepeatOrderButton locale={loc} items={repeatItems} />
+
+        <Link href={`/${loc}/menu`} className="mt-3 flex items-center justify-center rounded-2xl border-2 border-ink/85 px-4 py-3 text-sm font-bold text-ink transition-colors hover:bg-ink hover:text-paper">
           {t('backToMenu')}
         </Link>
       </main>
