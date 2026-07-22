@@ -1,11 +1,104 @@
 {
   "nav": { "menu": "Menu", "about": "O nas", "delivery": "Dostawa", "contact": "Kontakt", "language": "Język" },
   "menu": { "search": "Znajdź danie…", "soldOut": "Brak w sprzedaży", "from": "od" },
+  "cart": { "title": "Koszyk", "add": "Dodaj", "addToCart": "Do koszyka", "choose": "Wybierz", "qty": "Ilość", "total": "Razem", "required": "wymagane", "empty": "Twój koszyk jest pusty", "toMenu": "Przejdź do menu", "subtotal": "Suma", "deliveryLine": "Dostawa", "free": "Za darmo", "toFree": "do darmowej dostawy", "addForFree": "Dodaj za {amount}, a dostawa będzie gratis", "checkout": "Zamów", "minOrder": "Min. zamówienie", "remove": "Usuń" },
+  "checkout": {
+    "title": "Zamówienie",
+    "delivery": "Dostawa",
+    "pickup": "Odbiór osobisty",
+    "contactTitle": "Dane kontaktowe",
+    "name": "Imię",
+    "namePlaceholder": "Jan Kowalski",
+    "nameRequired": "Podaj imię",
+    "phone": "Telefon",
+    "phonePlaceholder": "+48 500 100 200",
+    "phoneInvalid": "Podaj poprawny numer telefonu",
+    "addressTitle": "Adres dostawy",
+    "addressRequired": "Podaj ulicę",
+    "timeTitle": "Czas",
+    "time": "Kiedy dostarczyć",
+    "asap": "Jak najszybciej (~40 min)",
+    "paymentTitle": "Płatność",
+    "paymentCash": "Gotówka przy odbiorze",
+    "changeFrom": "Reszta z (opcjonalnie)",
+    "changePlaceholder": "np. 100 zł",
+    "notesTitle": "Uwagi",
+    "notesPlaceholder": "np. domofon nie działa, zostawić pod drzwiami",
+    "subtotal": "Suma",
+    "deliveryLine": "Dostawa",
+    "free": "Za darmo",
+    "total": "Razem",
+    "belowMin": "Minimalne zamówienie",
+    "submit": "Złóż zamówienie",
+    "submitting": "Wysyłanie…",
+    "emptyCart": "Twój koszyk jest pusty",
+    "toMenu": "Przejdź do menu",
+    "street": "Ulica",
+    "building": "Nr budynku",
+    "apartment": "Mieszkanie",
+    "floor": "Piętro",
+    "entrance": "Klatka",
+    "intercom": "Domofon",
+    "errors": {
+      "below_min_order": "Kwota zamówienia jest poniżej minimum.",
+      "closed": "Restauracja jest teraz zamknięta — wybierz późniejszą godzinę.",
+      "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    }
+  },
+  "order": {
+    "confirmedTitle": "Dziękujemy! Zamówienie przyjęte",
+    "confirmedSub": "Wkrótce zadzwonimy, aby potwierdzić szczegóły i czas dostawy.",
+    "number": "Numer zamówienia",
+    "statusPending": "Oczekuje na potwierdzenie",
+    "backToMenu": "Wróć do menu"
+  },
   "home": {
     "status": "Otwarte do 22:00 · dostawa ~40 min",
     "title": "Domowa kuchnia,",
     "titleAccent": "bez pośpiechu",
     "subcopy": "Barszcz, pierogi, domowe kotlety — gotujemy naprawdę i dowozimy ciepłe pod Twoje drzwi.",
-    "cta": "Zamów dostawę"
+    "cta": "Zamów dostawę",
+    "menuBtn": "Zobacz menu",
+    "deliveryLabel": "Dostawa",
+    "freeFrom": "Za darmo od",
+    "minLabel": "Min. zamówienie",
+    "heroAlt": "Kotlet po wiedeńsku z jajkiem sadzonym",
+    "about": {
+      "eyebrow": "O nas",
+      "title": "Gotujemy tak, jak w domu",
+      "body1": "Barszcz na prawdziwym wywarze, pierogi lepione ręcznie, kotlety smażone na złoto. Żadnych półproduktów — tylko uczciwe, sycące jedzenie jak od babci.",
+      "body2": "Jesteśmy małą, rodzinną kuchnią w Twojej okolicy. Zamów, a dowieziemy ciepłe pod same drzwi.",
+      "tag1": "100% domowe",
+      "tag2": "Codziennie świeże"
+    },
+    "delivery": {
+      "eyebrow": "Dostawa",
+      "title": "Dostawa bez niespodzianek",
+      "subcopy": "Płacisz przy odbiorze — gotówką lub kartą u kuriera. Prosto i bez ryzyka.",
+      "feeNote": "stała opłata",
+      "timeLabel": "Czas dostawy",
+      "timeValue": "~40 min",
+      "payNote": "Płatność przy odbiorze — gotówka lub karta"
+    },
+    "contact": {
+      "eyebrow": "Kontakt",
+      "title": "Masz ochotę? Zadzwoń albo zamów online",
+      "phoneLabel": "Zadzwoń i zamów",
+      "call": "Zadzwoń",
+      "addressLabel": "Adres",
+      "hoursLabel": "Godziny",
+      "orderOnline": "Zamów online"
+    }
+  },
+  "footer": {
+    "tagline": "Domowa kuchnia ukraińsko-polska. Gotujemy naprawdę i dowozimy ciepłe pod Twoje drzwi.",
+    "values": "Ciepło · Sycąco · Uczciwie",
+    "nav": "Nawigacja",
+    "contact": "Kontakt",
+    "hours": "Godziny",
+    "closed": "Zamknięte",
+    "payNote": "Płatność przy odbiorze",
+    "rights": "Wszelkie prawa zastrzeżone",
+    "days": { "mon": "Pon", "tue": "Wt", "wed": "Śr", "thu": "Czw", "fri": "Pt", "sat": "Sob", "sun": "Nd" }
   }
 }

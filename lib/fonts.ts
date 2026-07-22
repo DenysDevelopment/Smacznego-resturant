@@ -1,15 +1,18 @@
-import { Playfair_Display, Inter } from 'next/font/google'
+import { Bitter, Manrope } from 'next/font/google'
 
-// Playfair Display supports latin, latin-ext AND cyrillic — required for uk/ru
-// headings. (Fraunces has no cyrillic subset and would fail the build.)
-export const serif = Playfair_Display({
+// Canteen Poster type system.
+// Display: Bitter — a warm, sturdy slab serif (menu-board / deli energy), with a
+// real cyrillic subset for uk/ru. Body: Manrope — clean humanist sans, cyrillic too.
+// (Deliberately NOT Playfair/Cormorant/Fraunces/Inter — those are the restaurant reflex.)
+export const display = Bitter({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
-  variable: '--font-serif',
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-display',
   display: 'swap',
 })
 
-export const sans = Inter({
+export const body = Manrope({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
-  variable: '--font-sans',
+  variable: '--font-body',
   display: 'swap',
 })
