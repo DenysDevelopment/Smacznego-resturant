@@ -14,10 +14,10 @@ export function AddressFields({ value, onChange }: { value: AddressValue; onChan
   return (
     <div className="grid grid-cols-2 gap-3">
       {FIELDS.map((f) => (
-        <label key={f} className={`text-xs text-muted ${f === 'street' ? 'col-span-2' : ''}`}>
+        <label key={f} className={`text-xs font-semibold uppercase tracking-wide text-muted ${f === 'street' ? 'col-span-2' : ''}`}>
           {t(f)}
           <input value={value[f] as string} onChange={(e) => set(f, e.target.value)}
-            className="mt-1 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-cream" />
+            className="mt-1 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-sm font-medium text-ink outline-none transition-colors focus:border-beet" />
         </label>
       ))}
     </div>

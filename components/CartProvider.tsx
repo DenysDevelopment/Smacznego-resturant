@@ -1,8 +1,9 @@
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import type { Cart, CartItem } from '@/lib/cart/types'
 import { cartSubtotal } from '@/lib/cart/totals'
 import { itemKey } from '@/lib/cart/itemKey'
+import { flyToCart, pulseBadge } from '@/lib/cart/flyToCart'
 
 const STORAGE_KEY = 'smacznego-cart'
 
@@ -13,12 +14,25 @@ interface CartApi {
   removeItem(key: string): void
   clear(): void
   keyOf(item: CartItem): string
+  /** Register the cart badge element so add-to-cart animations know where to fly. */
+  registerBadge(el: HTMLElement | null): void
+  /** Launch the fly-to-cart animation from `source` (falls back to a badge pulse). */
+  flyTo(source: HTMLElement | null, imageUrl: string | null): void
 }
 
 const CartContext = createContext<CartApi | null>(null)
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<Cart>([])
+  const badgeRef = useRef<HTMLElement | null>(null)
+
+  const registerBadge = useCallback((el: HTMLElement | null) => { badgeRef.current = el }, [])
+  const flyTo = useCallback((source: HTMLElement | null, imageUrl: string | null) => {
+    const badge = badgeRef.current
+    if (!badge) return
+    if (source) flyToCart(source, imageUrl, badge)
+    else pulseBadge(badge)
+  }, [])
 
   // hydrate once on mount
   useEffect(() => {
@@ -55,7 +69,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const subtotal = cartSubtotal(items)
 
   return (
-    <CartContext.Provider value={{ items, count, subtotal, addItem, setQty, removeItem, clear, keyOf: itemKey }}>
+    <CartContext.Provider value={{ items, count, subtotal, addItem, setQty, removeItem, clear, keyOf: itemKey, registerBadge, flyTo }}>
       {children}
     </CartContext.Provider>
   )

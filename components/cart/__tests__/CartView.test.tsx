@@ -7,7 +7,7 @@ import { SettingsProvider } from '@/components/SettingsProvider'
 import type { Settings } from '@/lib/settings/types'
 import type { CartItem } from '@/lib/cart/types'
 
-const messages = { cart: { empty: 'Pusto', subtotal: 'Suma', toFree: 'do darmowej dostawy', checkout: 'Zamów', minOrder: 'Min. zamówienie', remove: 'Usuń' } }
+const messages = { cart: { title: 'Koszyk', empty: 'Pusto', toMenu: 'Do menu', subtotal: 'Suma', deliveryLine: 'Dostawa', free: 'Za darmo', total: 'Razem', addForFree: '{amount} do darmowej dostawy', toFree: 'do darmowej dostawy', checkout: 'Zamów', minOrder: 'Min. zamówienie', remove: 'Usuń' } }
 const settings = { deliveryFee: 800, freeDeliveryThreshold: 6000, minOrder: 3000 } as Settings
 const item: CartItem = { dishId: 'd1', name: 'Barszcz', unitPrice: 2800, qty: 1, selectedOptions: [] }
 

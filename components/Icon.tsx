@@ -9,6 +9,16 @@ const PATHS: Record<string, React.ReactNode> = {
   globe: (<><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" /></>),
   chevron: (<path d="M6 9l6 6 6-6" />),
   plus: (<path d="M12 5v14M5 12h14" />),
+  phone: (<path d="M5 3h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z" />),
+  pin: (<><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" /></>),
+  wallet: (<><path d="M3 7h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a1 1 0 0 1-1-1z" /><path d="M3 7V6a2 2 0 0 1 2-2h11" /><circle cx="16.5" cy="13" r="1.3" /></>),
+  check: (<path d="M4 12l5 5L20 6" />),
+  bars: (<path d="M4 7h16M4 12h16M4 17h16" />),
+  close: (<path d="M6 6l12 12M18 6L6 18" />),
+  fries: (<><path d="M6.5 10h11l-1.2 10h-8.6z" /><path d="M9 10V4M12 10V2.5M15 10V5" /></>),
+  potato: (<><ellipse cx="12" cy="12" rx="8" ry="5.5" /><path d="M9 10.5h.01M13.5 13h.01M15.5 10h.01" /></>),
+  grain: (<><path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z" /><path d="M8 8.5l1 2M12 7v3.5M16 8.5l-1 2" /></>),
+  salad: (<><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z" /><path d="M5.5 18.5c4-4 7-6 11-8" /></>),
 }
 
 export type IconName = keyof typeof PATHS

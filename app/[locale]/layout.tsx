@@ -2,10 +2,11 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { LOCALES, type Locale } from '@/i18n/config'
-import { serif, sans } from '@/lib/fonts'
+import { display, body } from '@/lib/fonts'
 import { getSettings } from '@/lib/settings/getSettings'
 import { SettingsProvider } from '@/components/SettingsProvider'
 import { CartProvider } from '@/components/CartProvider'
+import { SiteFooter } from '@/components/SiteFooter'
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }))
@@ -24,11 +25,14 @@ export default async function LocaleLayout({
   const messages = await getMessages()
   const settings = await getSettings()
   return (
-    <html lang={locale} className={`${serif.variable} ${sans.variable}`}>
+    <html lang={locale} className={`${display.variable} ${body.variable}`}>
       <body>
         <NextIntlClientProvider messages={messages}>
           <SettingsProvider value={settings}>
-            <CartProvider>{children}</CartProvider>
+            <CartProvider>
+              {children}
+              <SiteFooter locale={locale as Locale} />
+            </CartProvider>
           </SettingsProvider>
         </NextIntlClientProvider>
       </body>

@@ -1,22 +1,42 @@
 @import "tailwindcss";
 
+/* ===== Canteen Poster — warm paper, beetroot, mustard ===== */
 @theme {
-  --color-espresso: #14100d;
-  --color-surface: #1c1611;
-  --color-gold: #e0a44a;
-  --color-cream: #f6ecdd;
-  --color-muted: #b39d84;
-  --color-success: #59d17d;
-  --color-danger: #e5484d;
-  --color-line: rgba(224, 164, 74, 0.18);
+  --color-paper: #f4e9d2;   /* warm cream page */
+  --color-panel: #fbf4e4;   /* raised card / input */
+  --color-ink: #241c15;     /* warm near-black text (never #000) */
+  --color-beet: #a4123f;    /* committed brand color — buttons, accents */
+  --color-beet-deep: #7d0f33;
+  --color-mustard: #cf862a; /* secondary warm pop */
+  --color-herb: #4f7a3a;    /* success */
+  --color-brick: #bf3b2b;   /* danger / sold-out */
+  --color-muted: #7d6c56;   /* warm muted text */
+  --color-line: rgba(36, 28, 21, 0.14);
+  --color-line-strong: rgba(36, 28, 21, 0.85);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 body {
-  background: var(--color-espresso);
-  color: var(--color-cream);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 h1, h2, h3 {
-  font-family: var(--font-serif), Georgia, serif;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.02;
 }
+
+::selection { background: var(--color-beet); color: var(--color-paper); }

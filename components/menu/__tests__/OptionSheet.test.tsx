@@ -5,7 +5,7 @@ import { OptionSheet } from '@/components/menu/OptionSheet'
 import { CartProvider, useCart } from '@/components/CartProvider'
 import type { LocalizedDish } from '@/lib/menu/types'
 
-const messages = { cart: { add: 'Dodaj', choose: 'Wybierz', qty: 'Ilość', total: 'Razem', required: 'wymagane' } }
+const messages = { cart: { add: 'Dodaj', choose: 'Wybierz', qty: 'Ilość', total: 'Razem', required: 'wymagane', remove: 'Usuń', free: 'Za darmo' } }
 
 const dish: LocalizedDish = {
   id: 'd1', name: 'Barszcz', description: '', basePrice: 2800, photoUrl: null, isAvailable: true, tags: [],
@@ -37,7 +37,7 @@ describe('OptionSheet', () => {
     // Add disabled until the required group is chosen
     const addBtn = screen.getByRole('button', { name: /Dodaj/ })
     expect(addBtn).toBeDisabled()
-    await user.click(screen.getByLabelText(/500 ml/))
+    await user.click(screen.getByRole('radio', { name: /500 ml/ }))
     expect(addBtn).toBeEnabled()
     await user.click(addBtn)
     expect(screen.getByTestId('c').textContent).toBe('1')
