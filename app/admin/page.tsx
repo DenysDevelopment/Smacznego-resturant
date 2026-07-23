@@ -9,7 +9,7 @@ export default async function AdminPage() {
   await requireRole('staff')
   const orders = await listActiveOrders()
   return (
-    <main className="mx-auto max-w-6xl px-5 py-8">
+    <main className="mx-auto max-w-[110rem] px-5 py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-extrabold tracking-tight">Пульт кухни</h1>
         <OrderStream role="staff" />

@@ -2,6 +2,7 @@ import 'server-only'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { hasRole } from '@/lib/auth/require'
 import { warsawStartOfDayUtc } from '@/lib/time/warsaw'
+import type { AddressParts } from '@/lib/address/types'
 import type { OrderStatus, OrderType } from './statusFlow'
 
 export interface AdminOrderItem {
@@ -13,7 +14,7 @@ export interface AdminOrder {
   customer_name: string; customer_phone: string
   subtotal: number; delivery_fee: number; total: number
   payment_method: string; cash_change_from: number | null; notes: string | null
-  address_snapshot: { formatted?: string } | null
+  address_snapshot: (AddressParts & { formatted?: string }) | null
   scheduled_for: string | null; created_at: string
   order_items: AdminOrderItem[]
 }
