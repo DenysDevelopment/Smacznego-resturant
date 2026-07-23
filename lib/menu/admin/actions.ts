@@ -7,10 +7,16 @@ import {
   cleanI18n, validateDishInput, validateOptionGroupInput, validateOptionInput,
   type DishInput, type OptionGroupInput, type OptionInput,
 } from './validate'
+import { importImageFromUrl } from './upload'
 import type { Json } from '@/lib/supabase/types'
 
 type Fail = { ok: false; error: string; field?: string }
 const unauthorized: Fail = { ok: false, error: 'unauthorized' }
+
+/** http(s) link to a host other than our own storage bucket. */
+function isExternalImageUrl(v: string): boolean {
+  return /^https?:\/\//i.test(v) && !v.includes('/storage/v1/object/public/')
+}
 
 function revalidateMenu(): void {
   for (const locale of LOCALES) {
@@ -19,18 +25,29 @@ function revalidateMenu(): void {
   }
 }
 
-export async function upsertDish(input: DishInput): Promise<{ ok: true; id: string } | Fail> {
+export async function upsertDish(input: DishInput): Promise<{ ok: true; id: string; photoUrl: string | null } | Fail> {
   if (!(await hasRole('staff'))) return unauthorized
   const valid = validateDishInput(input)
   if (!valid.ok) return valid
+
+  // Never persist a third-party image URL: pull it into our own storage so the
+  // storefront (optimized <Image> + strict prod CSP) can actually load it.
+  let photo = input.photoUrl?.trim() || null
+  if (photo && isExternalImageUrl(photo)) {
+    const imported = await importImageFromUrl(photo)
+    if (!imported.ok) return { ok: false, error: 'photo_import_failed', field: 'photoUrl' }
+    photo = imported.url
+  }
+
   const admin = createAdminClient()
   const row = {
     category_id: input.categoryId,
     name: cleanI18n(input.name) as unknown as Json,
     description: cleanI18n(input.description) as unknown as Json,
     base_price: input.basePrice,
-    photo_url: input.photoUrl?.trim() || null,
+    photo_url: photo,
     is_available: input.isAvailable,
+    is_hidden: input.isHidden,
     tags: input.tags.map((t) => t.trim()).filter(Boolean),
     sort: input.sort,
   }
@@ -40,7 +57,7 @@ export async function upsertDish(input: DishInput): Promise<{ ok: true; id: stri
   const { data, error } = await query
   if (error || !data) return { ok: false, error: 'db_error' }
   revalidateMenu()
-  return { ok: true, id: data.id }
+  return { ok: true, id: data.id, photoUrl: photo }
 }
 
 export async function deleteDish(id: string): Promise<{ ok: true } | Fail> {

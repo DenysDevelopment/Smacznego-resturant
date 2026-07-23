@@ -26,6 +26,18 @@ function warsawWallToUtc(y: number, mo: number, da: number, h = 0, mi = 0): Date
   return new Date(guess - offset)
 }
 
+const SLOT_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/
+/**
+ * UTC instant for a Warsaw wall-clock slot string 'YYYY-MM-DDTHH:MM'
+ * (what the checkout generates/validates), or null if malformed. Avoids
+ * `new Date(str)`, which would interpret the slot in the server's timezone.
+ */
+export function warsawSlotToUtc(value: string): Date | null {
+  const m = SLOT_RE.exec(value)
+  if (!m) return null
+  return warsawWallToUtc(Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5]))
+}
+
 /** 00:00 Europe/Warsaw of the day containing `now`, as a UTC Date. */
 export function warsawStartOfDayUtc(now: Date): Date {
   const p = warsawParts(now)

@@ -40,8 +40,10 @@ export function OrderCard({ order }: { order: AdminOrder }) {
         {order.type === 'delivery' && order.address_snapshot?.formatted && (
           <span className="flex items-center gap-1 text-ink/80"><Icon name="pin" size={14} className="text-beet" />{order.address_snapshot.formatted}</span>
         )}
-        <span className="flex items-center gap-1 text-ink/80"><Icon name="wallet" size={14} className="text-beet" />
-          {order.cash_change_from ? `Сдача с ${formatZloty(order.cash_change_from, 'pl')}` : 'Наличные'}
+        <span className="flex items-center gap-1 text-ink/80"><Icon name={order.payment_method === 'card' ? 'card' : 'wallet'} size={14} className="text-beet" />
+          {order.payment_method === 'card'
+            ? 'Картой'
+            : order.cash_change_from ? `Сдача с ${formatZloty(order.cash_change_from, 'pl')}` : 'Наличные'}
         </span>
         <span className="ml-auto text-lg font-extrabold text-beet">{formatZloty(order.total, 'pl')}</span>
       </div>

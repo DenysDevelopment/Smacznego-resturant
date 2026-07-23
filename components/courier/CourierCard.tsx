@@ -17,8 +17,10 @@ export function CourierCard({ order }: { order: AdminOrder }) {
         <Icon name="phone" size={18} className="text-beet" />{order.customer_name} · {order.customer_phone}
       </a>
       <p className="mt-2 flex items-start gap-2 text-base"><Icon name="pin" size={18} className="mt-0.5 shrink-0 text-beet" />{addr}</p>
-      <p className="mt-2 flex items-center gap-2 text-sm text-ink/80"><Icon name="wallet" size={16} className="text-beet" />
-        {order.cash_change_from ? `Наличные · сдача с ${formatZloty(order.cash_change_from, 'pl')}` : 'Наличные'}
+      <p className="mt-2 flex items-center gap-2 text-sm text-ink/80"><Icon name={order.payment_method === 'card' ? 'card' : 'wallet'} size={16} className="text-beet" />
+        {order.payment_method === 'card'
+          ? 'Картой — нужен терминал'
+          : order.cash_change_from ? `Наличные · сдача с ${formatZloty(order.cash_change_from, 'pl')}` : 'Наличные'}
       </p>
       <ul className="mt-2 text-sm text-muted">
         {order.order_items.map((i, idx) => <li key={idx}>{i.qty}× {i.name}</li>)}

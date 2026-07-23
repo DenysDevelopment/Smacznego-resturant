@@ -8,7 +8,7 @@ import { Icon } from '@/components/Icon'
 const TABS = [
   { href: '/admin', label: 'Заказы' },
   { href: '/admin/menu', label: 'Меню' },
-  { href: '/admin/logs', label: 'Логи' },
+  { href: '/admin/logs', label: 'История' },
   { href: '/admin/texts', label: 'Тексты' },
   { href: '/admin/settings', label: 'Настройки' },
 ]

@@ -123,7 +123,9 @@ export function OrderDetailModal({ orderId, onClose }: { orderId: string; onClos
               )}
               <Row label="Когда">{order.scheduled_for ? fmt(order.scheduled_for) : 'Как можно скорее'}</Row>
               <Row label="Оплата">
-                {order.cash_change_from ? `Наличные, сдача с ${formatZloty(order.cash_change_from, 'ru')}` : 'Наличные при получении'}
+                {order.payment_method === 'card'
+                  ? 'Картой при получении'
+                  : order.cash_change_from ? `Наличные, сдача с ${formatZloty(order.cash_change_from, 'ru')}` : 'Наличные при получении'}
               </Row>
               {order.notes && <Row label="Комментарий">{order.notes}</Row>}
             </div>

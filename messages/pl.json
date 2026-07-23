@@ -19,7 +19,11 @@
     "time": "Kiedy dostarczyć",
     "asap": "Jak najszybciej (~40 min)",
     "paymentTitle": "Płatność",
+    "payCash": "Gotówka",
+    "payCard": "Kartą",
     "paymentCash": "Gotówka przy odbiorze",
+    "paymentCard": "Kartą przy odbiorze",
+    "paymentCardNote": "Płatność kartą na miejscu — kurier przywiezie terminal (przy odbiorze osobistym — przy kasie).",
     "changeFrom": "Reszta z (opcjonalnie)",
     "changePlaceholder": "np. 100 zł",
     "notesTitle": "Uwagi",
@@ -75,7 +79,11 @@
       "track": "Śledź",
       "open": "Otwórz",
       "repeat": "Powtórz",
-      "repeatUnavailable": "Dania niedostępne"
+      "repeatUnavailable": "Dania niedostępne",
+      "repeatChecking": "Sprawdzamy…",
+      "reorderSomeUnavailable": "Część dań jest teraz niedostępna i nie została dodana do koszyka:",
+      "reorderNoneAvailable": "Żadne danie z tego zamówienia nie jest teraz dostępne.",
+      "goToCart": "Przejdź do koszyka"
     }
   },
   "home": {

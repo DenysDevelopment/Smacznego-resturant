@@ -205,6 +205,7 @@ export type Database = {
           description: Json
           id: string
           is_available: boolean
+          is_hidden: boolean
           name: Json
           photo_url: string | null
           sort: number
@@ -216,6 +217,7 @@ export type Database = {
           description?: Json
           id?: string
           is_available?: boolean
+          is_hidden?: boolean
           name: Json
           photo_url?: string | null
           sort?: number
@@ -227,6 +229,7 @@ export type Database = {
           description?: Json
           id?: string
           is_available?: boolean
+          is_hidden?: boolean
           name?: Json
           photo_url?: string | null
           sort?: number

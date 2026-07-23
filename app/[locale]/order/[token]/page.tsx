@@ -137,7 +137,8 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
             </p>
           )}
           <p className="mt-2 flex items-center gap-2 text-ink/80">
-            <Icon name="wallet" size={16} className="text-beet" />{tc('paymentCash')}
+            <Icon name={order.payment_method === 'card' ? 'card' : 'wallet'} size={16} className="text-beet" />
+            {order.payment_method === 'card' ? tc('paymentCard') : tc('paymentCash')}
           </p>
         </div>
 
