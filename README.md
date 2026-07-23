@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Auth notes
+
+Admin/courier sessions are stateless HMAC cookies signed with `AUTH_SECRET`
+(7-day TTL). There is no per-session revocation: to force-logout everyone
+(e.g. after a leaked passcode), rotate `AUTH_SECRET` and restart the app.
+Login and order creation are rate-limited in-memory per server process.
+
 ## Getting Started
 
 First, run the development server:

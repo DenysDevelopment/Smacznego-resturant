@@ -1,10 +1,13 @@
-import { getSession } from '@/lib/auth/session'
+import { getAnySession } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const session = await getSession()
+  // Both staff and courier sessions may subscribe by design: the courier
+  // screen uses this stream too, and the payload carries no PII (only
+  // eventType/status/orderType).
+  const session = await getAnySession()
   if (!session) return new Response('unauthorized', { status: 401 })
 
   const admin = createAdminClient()

@@ -1,10 +1,12 @@
 import { listActiveOrders } from '@/lib/orders/adminOrders'
+import { requireRole } from '@/lib/auth/require'
 import { OrderBoard } from '@/components/admin/OrderBoard'
 import { OrderStream } from '@/components/admin/OrderStream'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {
+  await requireRole('staff')
   const orders = await listActiveOrders()
   return (
     <main className="mx-auto max-w-6xl px-5 py-8">

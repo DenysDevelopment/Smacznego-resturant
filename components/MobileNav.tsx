@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Icon } from '@/components/Icon'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { useSettings } from '@/components/SettingsProvider'
 import type { Locale } from '@/i18n/config'
 
@@ -19,7 +20,7 @@ export function MobileNav({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="sm:hidden">
+    <div className="md:hidden">
       <button
         type="button"
         aria-label={t('menu')}
@@ -65,9 +66,14 @@ export function MobileNav({ locale }: { locale: Locale }) {
               ))}
             </div>
 
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-sm font-semibold text-muted">{t('language')}</span>
+              <LanguageSwitcher current={locale} label={t('language')} />
+            </div>
+
             <a
               href={`tel:${s.phone.replace(/[^+\d]/g, '')}`}
-              className="mt-5 flex items-center justify-center gap-2 rounded-2xl bg-beet px-5 py-3.5 text-base font-bold text-paper"
+              className="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-beet px-5 py-3.5 text-base font-bold text-paper"
             >
               <Icon name="phone" size={18} />{s.phone}
             </a>

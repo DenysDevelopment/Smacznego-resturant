@@ -1,8 +1,15 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 
 export type Role = 'staff' | 'courier'
-export const SESSION_COOKIE = 'sc_session'
-export const SESSION_TTL_MS = 30 * 24 * 3600_000
+
+// Per-role cookies so a staff and a courier session can coexist in one browser
+// (logging into one no longer clobbers the other).
+export function sessionCookieName(role: Role): string {
+  return `sc_session_${role}`
+}
+// Stateless HMAC tokens can't be revoked individually — rotating AUTH_SECRET
+// logs everyone out. Keep the TTL short.
+export const SESSION_TTL_MS = 7 * 24 * 3600_000
 
 function hmac(payload: string, secret: string): string {
   return createHmac('sha256', secret).update(payload).digest('hex')

@@ -1,7 +1,7 @@
 import { Icon } from '@/components/Icon'
 import { formatZloty } from '@/lib/menu/price'
 import { STATUS_LABEL_RU, operatorActions } from '@/lib/orders/statusFlow'
-import { orderNumber, formatOrderTime } from '@/lib/orders/format'
+import { orderNumber, formatOrderTime, formatScheduledFor } from '@/lib/orders/format'
 import { StatusButton } from './StatusButton'
 import type { AdminOrder } from '@/lib/orders/adminOrders'
 
@@ -16,6 +16,11 @@ export function OrderCard({ order }: { order: AdminOrder }) {
         </span>
       </div>
       <p className="mt-1 text-xs text-muted">{formatOrderTime(order.created_at)}</p>
+
+      <p className="mt-2 flex items-center gap-1.5 rounded-lg bg-beet/10 px-2.5 py-1.5 text-sm font-bold text-beet">
+        <Icon name="clock" size={15} className="shrink-0" />
+        {order.scheduled_for ? `Ко времени: ${formatScheduledFor(order.scheduled_for)}` : 'Как можно скорее'}
+      </p>
 
       <ul className="mt-3 space-y-1 text-sm">
         {order.order_items.map((i, idx) => (
