@@ -22,6 +22,7 @@ export interface OrderDetail {
   customer_phone: string
   address: AddressValue | null
   notes: string | null
+  payment_method: string
   cash_change_from: number | null
   scheduled_for: string | null
   subtotal: number
@@ -38,7 +39,7 @@ export async function getOrderDetail(orderId: string): Promise<{ ok: true; order
 
   const { data: order, error } = await admin
     .from('orders')
-    .select('id, public_token, status, type, customer_name, customer_phone, address_snapshot, notes, cash_change_from, scheduled_for, subtotal, delivery_fee, total, created_at, order_items(name, qty, unit_price, line_total, selected_options)')
+    .select('id, public_token, status, type, customer_name, customer_phone, address_snapshot, notes, payment_method, cash_change_from, scheduled_for, subtotal, delivery_fee, total, created_at, order_items(name, qty, unit_price, line_total, selected_options)')
     .eq('id', orderId)
     .maybeSingle()
   if (error) return { ok: false, error: 'db_error' }
@@ -54,7 +55,7 @@ export async function getOrderDetail(orderId: string): Promise<{ ok: true; order
     id: string; public_token: string; status: OrderStatus; type: OrderType
     customer_name: string; customer_phone: string
     address_snapshot: AddressValue | null; notes: string | null
-    cash_change_from: number | null; scheduled_for: string | null
+    payment_method: string; cash_change_from: number | null; scheduled_for: string | null
     subtotal: number; delivery_fee: number; total: number; created_at: string
     order_items: OrderDetailItem[]
   }
@@ -70,6 +71,7 @@ export async function getOrderDetail(orderId: string): Promise<{ ok: true; order
       customer_phone: o.customer_phone,
       address: o.address_snapshot,
       notes: o.notes,
+      payment_method: o.payment_method,
       cash_change_from: o.cash_change_from,
       scheduled_for: o.scheduled_for,
       subtotal: o.subtotal,

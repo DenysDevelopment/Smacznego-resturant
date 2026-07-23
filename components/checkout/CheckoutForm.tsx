@@ -32,6 +32,7 @@ export function CheckoutForm({ locale }: { locale: Locale }) {
   const [address, setAddress] = useState<AddressValue>(emptyAddress)
   const [scheduledFor, setScheduledFor] = useState('')
   const [notes, setNotes] = useState('')
+  const [payment, setPayment] = useState<'cash' | 'card'>('cash')
   const [changeFrom, setChangeFrom] = useState('')
   const [slots, setSlots] = useState<{ value: string; dayKey: string; hhmm: string }[]>([])
   const [openNow, setOpenNow] = useState(true)
@@ -88,7 +89,8 @@ export function CheckoutForm({ locale }: { locale: Locale }) {
       address: type === 'delivery' ? { ...address, formatted: formatAddress(address) } : null,
       scheduledFor: scheduledFor || null,
       notes: notes.trim(),
-      cashChangeFrom: changeGrosze && changeGrosze > 0 ? changeGrosze : null,
+      paymentMethod: payment,
+      cashChangeFrom: payment === 'cash' && changeGrosze && changeGrosze > 0 ? changeGrosze : null,
       cart: items,
     })
     if ('token' in res) {
@@ -165,13 +167,27 @@ export function CheckoutForm({ locale }: { locale: Locale }) {
         {/* Payment */}
         <section className="rounded-3xl border border-line bg-panel p-5">
           <h2 className="text-sm font-bold uppercase tracking-widest text-beet">{t('paymentTitle')}</h2>
-          <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-ink">
-            <Icon name="wallet" size={18} className="text-beet" />{t('paymentCash')}
-          </p>
-          <label className="mt-3 block text-xs font-semibold uppercase tracking-wide text-muted">
-            {t('changeFrom')}
-            <input value={changeFrom} onChange={(e) => setChangeFrom(e.target.value)} inputMode="decimal" placeholder={t('changePlaceholder')} className={inputCls} />
-          </label>
+          <div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl border border-line bg-paper p-1.5">
+            {(['cash', 'card'] as const).map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setPayment(opt)}
+                className={`flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold transition-colors ${payment === opt ? 'bg-beet text-paper' : 'text-ink/70 hover:text-ink'}`}
+              >
+                <Icon name={opt === 'cash' ? 'wallet' : 'card'} size={17} />
+                {opt === 'cash' ? t('payCash') : t('payCard')}
+              </button>
+            ))}
+          </div>
+          {payment === 'cash' ? (
+            <label className="mt-3 block text-xs font-semibold uppercase tracking-wide text-muted">
+              {t('changeFrom')}
+              <input value={changeFrom} onChange={(e) => setChangeFrom(e.target.value)} inputMode="decimal" placeholder={t('changePlaceholder')} className={inputCls} />
+            </label>
+          ) : (
+            <p className="mt-3 text-xs font-medium text-muted">{t('paymentCardNote')}</p>
+          )}
         </section>
 
         {/* Notes */}

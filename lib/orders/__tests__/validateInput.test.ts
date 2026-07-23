@@ -12,6 +12,7 @@ function baseInput(over: Partial<CreateOrderInput> = {}): CreateOrderInput {
     address: null,
     scheduledFor: null,
     notes: '',
+    paymentMethod: 'cash',
     cashChangeFrom: null,
     cart: [{ dishId: 'd1', name: 'x', unitPrice: 1000, qty: 1, selectedOptions: [] }],
     ...over,
@@ -40,6 +41,15 @@ describe('validateOrderInput', () => {
     expect(validateOrderInput(baseInput({ cashChangeFrom: -1 }))).toEqual({ ok: false, error: 'bad_cash' })
     expect(validateOrderInput(baseInput({ cashChangeFrom: 1_000_001 }))).toEqual({ ok: false, error: 'bad_cash' })
     expect(validateOrderInput(baseInput({ cashChangeFrom: 10.5 }))).toEqual({ ok: false, error: 'bad_cash' })
+  })
+
+  it('rejects an unknown payment method', () => {
+    // @ts-expect-error — exercising the runtime guard with an invalid value
+    expect(validateOrderInput(baseInput({ paymentMethod: 'crypto' }))).toEqual({ ok: false, error: 'bad_payment' })
+  })
+
+  it('accepts card payment', () => {
+    expect(validateOrderInput(baseInput({ paymentMethod: 'card' }))).toEqual({ ok: true })
   })
 
   it('bounds cart size and qty', () => {

@@ -23,8 +23,11 @@ export function MenuList({ categories }: { categories: AdminCategoryGroup[] }) {
                   <span className="shrink-0 text-sm text-muted">{formatZloty(dish.basePrice, 'ru')}</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  {!dish.isAvailable && (
-                    <span className="rounded-full bg-brick/10 px-2.5 py-0.5 text-xs font-bold text-brick">Стоп-лист</span>
+                  {dish.isHidden && (
+                    <span className="rounded-full bg-ink/10 px-2.5 py-0.5 text-xs font-bold text-ink/70">Убрано с сайта</span>
+                  )}
+                  {!dish.isHidden && !dish.isAvailable && (
+                    <span className="rounded-full bg-brick/10 px-2.5 py-0.5 text-xs font-bold text-brick">Нет в наличии</span>
                   )}
                   {dish.optionGroupCount > 0 && (
                     <span className="rounded-full bg-mustard/15 px-2.5 py-0.5 text-xs font-bold text-mustard">

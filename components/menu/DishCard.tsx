@@ -20,6 +20,10 @@ export function DishCard({ dish, locale }: { dish: LocalizedDish; locale: Locale
             fill
             sizes="(max-width: 640px) 45vw, 220px"
             className="object-contain drop-shadow-[0_14px_18px_rgba(36,28,21,.28)] transition-transform duration-300 group-hover:scale-105"
+            // Storage-hosted uploads are served straight from Supabase (the prod
+            // CSP allows that host); skip the optimizer, which also rejects the
+            // loopback Supabase URL in local dev.
+            unoptimized={/^https?:\/\//i.test(dish.photoUrl)}
           />
         ) : (
           <div className="h-full w-full rounded-full bg-beet/10" />

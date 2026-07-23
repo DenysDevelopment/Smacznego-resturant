@@ -10,7 +10,8 @@ export interface DishInput {
   description: I18nText
   basePrice: number // grosze
   photoUrl: string | null
-  isAvailable: boolean
+  isAvailable: boolean // false = "нет в наличии" (visible with badge, not orderable)
+  isHidden: boolean    // true = "убрать с сайта" (not shown to customers at all)
   tags: string[]
   sort: number
 }

@@ -8,6 +8,7 @@ import { newToken } from './token'
 import { cartSubtotal } from '@/lib/cart/totals'
 import { deliveryFee, orderTotal, meetsMinOrder } from '@/lib/cart/totals'
 import { isOpenNow } from '@/lib/hours/hours'
+import { warsawSlotToUtc } from '@/lib/time/warsaw'
 import type { CartItem } from '@/lib/cart/types'
 import type { AddressValue } from '@/lib/address/types'
 import type { Locale } from '@/i18n/config'
@@ -21,7 +22,8 @@ export interface CreateOrderInput {
   address: AddressValue | null
   scheduledFor: string | null   // 'YYYY-MM-DDTHH:MM' local wall-clock, or null = ASAP
   notes: string
-  cashChangeFrom: number | null
+  paymentMethod: 'cash' | 'card' // both collected on handover; card = terminal on the spot
+  cashChangeFrom: number | null  // cash only; ignored for card
   cart: CartItem[]
 }
 
@@ -38,7 +40,7 @@ export async function createOrder(input: CreateOrderInput): Promise<{ token: str
   const dishIds = [...new Set(input.cart.map((i) => i.dishId))]
   const { data: dishes, error: dishErr } = await admin
     .from('dishes')
-    .select('id, name, base_price, is_available, option_groups(id, options(id, name, price_delta))')
+    .select('id, name, base_price, is_available, is_hidden, option_groups(id, options(id, name, price_delta))')
     .in('id', dishIds)
   if (dishErr) return { error: 'load_failed' }
 
@@ -96,13 +98,15 @@ export async function createOrder(input: CreateOrderInput): Promise<{ token: str
       customer_phone: input.phone,
       type: input.type,
       status: 'pending',
-      payment_method: 'cash',
-      cash_change_from: input.cashChangeFrom,
+      payment_method: input.paymentMethod,
+      cash_change_from: input.paymentMethod === 'cash' ? input.cashChangeFrom : null,
       subtotal, delivery_fee: fee, total,
       notes: input.notes || null,
       address_snapshot: (input.type === 'delivery' ? input.address : null) as unknown as Json,
+      // the slot is Warsaw wall-clock; convert via the TZ-aware helper so the
+      // stored instant is correct regardless of the server's timezone
       scheduled_for: input.scheduledFor
-        ? new Date(input.scheduledFor).toISOString() // interpreted below via SQL if needed; ISO is acceptable for MVP
+        ? (warsawSlotToUtc(input.scheduledFor) ?? new Date(input.scheduledFor)).toISOString()
         : null,
       language: input.locale,
     })

@@ -8,6 +8,7 @@ export interface AdminDishListItem {
   namePl: string
   basePrice: number
   isAvailable: boolean
+  isHidden: boolean
   optionGroupCount: number
   sort: number
   photoUrl: string | null
@@ -31,7 +32,7 @@ export async function listDishesForAdmin(): Promise<AdminCategoryGroup[]> {
   const admin = createAdminClient()
   const [cats, dishes, groups] = await Promise.all([
     admin.from('categories').select('id, name, sort').order('sort'),
-    admin.from('dishes').select('id, category_id, name, base_price, is_available, sort, photo_url').order('sort'),
+    admin.from('dishes').select('id, category_id, name, base_price, is_available, is_hidden, sort, photo_url').order('sort'),
     admin.from('option_groups').select('id, dish_id'),
   ])
   if (cats.error) throw new Error(`listDishesForAdmin(cats): ${cats.error.message}`)
@@ -53,6 +54,7 @@ export async function listDishesForAdmin(): Promise<AdminCategoryGroup[]> {
         namePl: (d.name as I18nText).pl ?? '',
         basePrice: d.base_price,
         isAvailable: d.is_available,
+        isHidden: d.is_hidden,
         optionGroupCount: groupCount.get(d.id) ?? 0,
         sort: d.sort,
         photoUrl: d.photo_url,
@@ -73,6 +75,7 @@ export interface AdminDishDetail {
   base_price: number
   photo_url: string | null
   is_available: boolean
+  is_hidden: boolean
   tags: string[]
   sort: number
   option_groups: AdminOptionGroupRaw[]
@@ -83,7 +86,7 @@ export async function getDishForEdit(id: string): Promise<AdminDishDetail | null
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('dishes')
-    .select('id, category_id, name, description, base_price, photo_url, is_available, tags, sort, option_groups(id, name, min_select, max_select, required, sort, options(id, name, price_delta, sort))')
+    .select('id, category_id, name, description, base_price, photo_url, is_available, is_hidden, tags, sort, option_groups(id, name, min_select, max_select, required, sort, options(id, name, price_delta, sort))')
     .eq('id', id)
     .maybeSingle()
   if (error) throw new Error(`getDishForEdit: ${error.message}`)

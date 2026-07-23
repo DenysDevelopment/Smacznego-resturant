@@ -1,19 +1,21 @@
 'use client'
 import { useState } from 'react'
 import { translateText } from '@/lib/translate/actions'
+import { showCenterToast } from '@/components/CenterToast'
 import type { I18nText } from '@/lib/menu/admin/validate'
 import type { Locale } from '@/i18n/config'
 
 const LOCS = ['pl', 'uk', 'ru'] as const
 const LABELS: Record<(typeof LOCS)[number], string> = { pl: 'PL', uk: 'UA', ru: 'RU' }
 
+// Shown as a small centered toast when auto-translate fails (API quota, DeepL down, etc.)
 const TR_ERRORS: Record<string, string> = {
-  unauthorized: 'нет доступа',
-  not_configured: 'DeepL не настроен',
-  empty: 'сначала введите текст',
-  quota: 'исчерпан лимит DeepL',
-  api_error: 'ошибка DeepL',
-  network: 'нет соединения',
+  unauthorized: 'Нет доступа к переводчику',
+  not_configured: 'Переводчик DeepL не настроен',
+  empty: 'Сначала введите текст',
+  quota: 'Лимит переводчика DeepL исчерпан',
+  api_error: 'Переводчик недоступен. Попробуйте позже',
+  network: 'Нет связи с переводчиком',
 }
 
 export function I18nField({
@@ -29,7 +31,6 @@ export function I18nField({
 }) {
   const [tab, setTab] = useState<(typeof LOCS)[number]>('pl')
   const [translating, setTranslating] = useState(false)
-  const [trError, setTrError] = useState('')
   const placeholder =
     placeholders?.[tab] ?? (tab === 'pl' ? 'Обязательно' : 'Необязательно (фолбэк на PL)')
   const inputCls =
@@ -38,9 +39,8 @@ export function I18nField({
   const current = (value[tab] ?? '').trim()
 
   async function translate() {
-    setTrError('')
     if (!current) {
-      setTrError(TR_ERRORS.empty)
+      showCenterToast(TR_ERRORS.empty, 'info')
       return
     }
     const targets = LOCS.filter((l) => l !== tab) as Locale[]
@@ -48,7 +48,7 @@ export function I18nField({
     const res = await translateText(current, tab as Locale, targets)
     setTranslating(false)
     if (!res.ok) {
-      setTrError(TR_ERRORS[res.error] ?? 'ошибка перевода')
+      showCenterToast(TR_ERRORS[res.error] ?? 'Не удалось перевести')
       return
     }
     onChange({ ...value, ...res.translations })
@@ -111,7 +111,6 @@ export function I18nField({
           placeholder={placeholder}
         />
       )}
-      {trError && <p className="mt-1 text-xs font-semibold text-brick">Перевод: {trError}</p>}
       {error && <p className="mt-1 text-xs font-semibold text-brick">{error}</p>}
     </div>
   )

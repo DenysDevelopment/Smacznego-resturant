@@ -12,14 +12,14 @@ export interface AdminOrder {
   id: string; public_token: string; status: OrderStatus; type: OrderType
   customer_name: string; customer_phone: string
   subtotal: number; delivery_fee: number; total: number
-  cash_change_from: number | null; notes: string | null
+  payment_method: string; cash_change_from: number | null; notes: string | null
   address_snapshot: { formatted?: string } | null
   scheduled_for: string | null; created_at: string
   order_items: AdminOrderItem[]
 }
 
 export const SELECT_COLUMNS =
-  'id, public_token, status, type, customer_name, customer_phone, subtotal, delivery_fee, total, cash_change_from, notes, address_snapshot, scheduled_for, created_at, order_items(name, qty, unit_price, line_total, selected_options)'
+  'id, public_token, status, type, customer_name, customer_phone, subtotal, delivery_fee, total, payment_method, cash_change_from, notes, address_snapshot, scheduled_for, created_at, order_items(name, qty, unit_price, line_total, selected_options)'
 
 const TERMINAL: OrderStatus[] = ['delivered', 'picked_up', 'cancelled', 'rejected']
 

@@ -33,6 +33,8 @@ export function validateOrderInput(input: CreateOrderInput): Result {
 
   if (typeof input.notes !== 'string' || input.notes.length > MAX.notes) return bad('bad_notes')
 
+  if (input.paymentMethod !== 'cash' && input.paymentMethod !== 'card') return bad('bad_payment')
+
   if (
     input.cashChangeFrom !== null &&
     (!Number.isInteger(input.cashChangeFrom) || input.cashChangeFrom < 0 || input.cashChangeFrom > MAX.cashChangeFrom)
