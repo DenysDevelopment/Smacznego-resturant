@@ -2,11 +2,12 @@ import { Icon } from '@/components/Icon'
 import { formatZloty } from '@/lib/menu/price'
 import { courierActions } from '@/lib/orders/statusFlow'
 import { orderNumber } from '@/lib/orders/format'
+import { formatOrderAddress } from '@/lib/address/types'
 import { StatusButton } from '@/components/admin/StatusButton'
 import type { AdminOrder } from '@/lib/orders/adminOrders'
 
 export function CourierCard({ order }: { order: AdminOrder }) {
-  const addr = order.address_snapshot?.formatted ?? '—'
+  const addr = formatOrderAddress(order.address_snapshot) || '—'
   return (
     <article className="rounded-2xl border border-line bg-panel p-5">
       <div className="flex items-center justify-between">

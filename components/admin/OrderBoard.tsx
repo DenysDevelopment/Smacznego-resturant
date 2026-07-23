@@ -17,20 +17,24 @@ export function OrderBoard({ orders }: { orders: AdminOrder[] }) {
   const nextReset = warsawNextMidnightUtc(new Date()).toISOString()
   const gmtLabel = warsawGmtLabel(new Date())
   return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <div className="space-y-5">
       {LANES.map((lane) => {
         const cards = orders.filter((o) => lane.statuses.includes(o.status))
+        const empty = cards.length === 0
         return (
-          <section key={lane.title}>
-            <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted">
-              {lane.title} <span className="rounded-full bg-line px-2 text-xs">{cards.length}</span>
+          <section key={lane.title} className={empty ? 'opacity-60' : ''}>
+            <h2 className="mb-2.5 flex items-center gap-2 border-b border-line pb-1.5 text-sm font-bold uppercase tracking-widest text-muted">
+              {lane.title}
+              <span className={`rounded-full px-2 text-xs ${empty ? 'bg-line' : 'bg-beet text-paper'}`}>{cards.length}</span>
               {lane.resetsDaily && <CompletedTimer nextResetIso={nextReset} gmtLabel={gmtLabel} />}
             </h2>
-            <div className="space-y-3">
-              {cards.length === 0
-                ? <p className="text-sm text-muted">—</p>
-                : cards.map((o) => <OrderCard key={o.id} order={o} />)}
-            </div>
+            {empty
+              ? <p className="text-sm text-muted">—</p>
+              : (
+                <div className="grid items-start gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                  {cards.map((o) => <OrderCard key={o.id} order={o} />)}
+                </div>
+              )}
           </section>
         )
       })}
