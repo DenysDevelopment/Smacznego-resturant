@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { formatZloty } from '@/lib/menu/price'
 import { AddToCartButton } from './AddToCartButton'
+import { SteamOverlay } from './SteamOverlay'
 import type { LocalizedDish } from '@/lib/menu/types'
 import type { Locale } from '@/i18n/config'
 
@@ -24,6 +25,7 @@ export function DishCard({ dish, locale }: { dish: LocalizedDish; locale: Locale
         ) : (
           <div className="h-full w-full rounded-full bg-beet/10" />
         )}
+        {dish.isAvailable && dish.photoUrl && dish.tags.includes('steam') && <SteamOverlay />}
         {!dish.isAvailable && (
           <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-8deg] rounded-full bg-brick px-3 py-1 text-xs font-bold text-paper shadow">
             {t('soldOut')}

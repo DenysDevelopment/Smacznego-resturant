@@ -40,3 +40,35 @@ h1, h2, h3 {
 }
 
 ::selection { background: var(--color-beet); color: var(--color-paper); }
+
+/* ===== Steam wisps over hot-dish photos (tag "steam") ===== */
+.steam i {
+  position: absolute;
+  bottom: 0;
+  width: 0.9rem;
+  height: 1.7rem;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+  filter: blur(5px);
+  opacity: 0;
+  animation: steam-rise-l 3.4s linear infinite;
+}
+.steam i:nth-child(1) { left: 38%; }
+.steam i:nth-child(2) { left: 52%; animation-name: steam-rise-r; animation-duration: 4.1s; animation-delay: 1.3s; }
+.steam i:nth-child(3) { left: 45%; animation-duration: 3.7s; animation-delay: 2.2s; }
+.steam-paused i { animation-play-state: paused; }
+
+@keyframes steam-rise-l {
+  0% { opacity: 0; transform: translateY(0) translateX(0) scale(0.7); }
+  30% { opacity: 0.45; }
+  100% { opacity: 0; transform: translateY(-1.9rem) translateX(-0.4rem) scale(1.2); }
+}
+@keyframes steam-rise-r {
+  0% { opacity: 0; transform: translateY(0) translateX(0) scale(0.7); }
+  30% { opacity: 0.45; }
+  100% { opacity: 0; transform: translateY(-1.9rem) translateX(0.4rem) scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steam { display: none; }
+}

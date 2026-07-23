@@ -31,7 +31,9 @@ export function DishForm({
   const [price, setPrice] = useState(initial ? formatGroszeToZlotyInput(initial.base_price) : '')
   const [categoryId, setCategoryId] = useState(initial?.category_id ?? categories[0]?.id ?? '')
   const [stopList, setStopList] = useState(initial ? !initial.is_available : false)
-  const [tags, setTags] = useState(initial?.tags.join(', ') ?? '')
+  // the "steam" tag is owned by the checkbox below, so the free-text field never shows it
+  const [steam, setSteam] = useState(initial?.tags.includes('steam') ?? false)
+  const [tags, setTags] = useState(initial?.tags.filter((t) => t !== 'steam').join(', ') ?? '')
   const [sort, setSort] = useState(String(initial?.sort ?? 0))
   const [photoUrl, setPhotoUrl] = useState(initial?.photo_url ?? '')
 
@@ -47,7 +49,8 @@ export function DishForm({
     (initial ? parseZlotyToGrosze(price) !== initial.base_price : price.trim() !== '') ||
     categoryId !== (initial?.category_id ?? categories[0]?.id ?? '') ||
     stopList !== (initial ? !initial.is_available : false) ||
-    normTags(tags) !== normTags(initial?.tags.join(',') ?? '') ||
+    steam !== (initial?.tags.includes('steam') ?? false) ||
+    normTags(tags) !== normTags(initial?.tags.filter((t) => t !== 'steam').join(',') ?? '') ||
     (initial ? Number(sort) !== initial.sort : sort.trim() !== '0') ||
     photoUrl.trim() !== (initial?.photo_url ?? '')
 
@@ -56,7 +59,8 @@ export function DishForm({
     if (grosze === null) return { ok: false, error: `Блюдо: ${FIELD_ERRORS.basePrice}` }
     const sortNum = Number(sort)
     if (!Number.isInteger(sortNum)) return { ok: false, error: `Блюдо: ${FIELD_ERRORS.sort}` }
-    const tagList = tags.split(',').map((t) => t.trim()).filter(Boolean)
+    const tagList = tags.split(',').map((t) => t.trim()).filter((t) => t && t !== 'steam')
+    if (steam) tagList.push('steam')
     const photo = photoUrl.trim()
     const res = await upsertDish({
       id: initial?.id,
@@ -80,7 +84,7 @@ export function DishForm({
     // normalize local state so the dirty flag resets after refresh
     setPrice(formatGroszeToZlotyInput(grosze))
     setSort(String(sortNum))
-    setTags(tagList.join(', '))
+    setTags(tagList.filter((t) => t !== 'steam').join(', '))
     setPhotoUrl(photo)
     return { ok: true }
   }
@@ -116,6 +120,11 @@ export function DishForm({
       </div>
 
       <PhotoField value={photoUrl} onChange={setPhotoUrl} />
+
+      <label className="flex items-center gap-2 text-sm font-semibold">
+        <input type="checkbox" checked={steam} onChange={(e) => setSteam(e.target.checked)} className="h-4 w-4 accent-beet" />
+        Дымок над блюдом (лёгкий пар на фото)
+      </label>
 
       <label className="flex items-center gap-2 text-sm font-semibold">
         <input type="checkbox" checked={stopList} onChange={(e) => setStopList(e.target.checked)} className="h-4 w-4 accent-beet" />
