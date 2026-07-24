@@ -184,6 +184,11 @@ cross join (values
   ('{"pl":"Surówka","uk":"Салат","ru":"Салат"}'::jsonb, 0, 5)
 ) as s(name, delta, sort);
 
+-- ===== Steam wisps on obviously-hot dishes (vareniki, pelmeni, cutlets) =====
+update dishes set tags = array_append(tags, 'steam')
+where category_id in (select id from categories where sort in (1, 2, 3))
+  and not ('steam' = any(tags));
+
 -- ===== Restaurant settings (singleton) =====
 insert into restaurant_settings (id, name, phone, address_text, lat, lng, delivery_radius_m,
   delivery_fee, free_delivery_threshold, min_order, hours, prep_lead_minutes)

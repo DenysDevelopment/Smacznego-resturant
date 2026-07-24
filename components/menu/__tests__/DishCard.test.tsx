@@ -36,4 +36,20 @@ describe('DishCard', () => {
     expect(screen.getByText('Brak w sprzedaży')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Barszcz' })).toBeDisabled()
   })
+
+  it('shows steam over the photo when the dish has the steam tag', () => {
+    const { container } = renderCard({ ...base, photoUrl: '/dishes/dish-01.webp', tags: ['steam'] })
+    expect(container.querySelector('[data-steam]')).toBeInTheDocument()
+  })
+
+  it('shows no steam without the tag, without a photo, or when sold out', () => {
+    const { container: plain } = renderCard({ ...base, photoUrl: '/dishes/dish-01.webp' })
+    expect(plain.querySelector('[data-steam]')).not.toBeInTheDocument()
+
+    const { container: noPhoto } = renderCard({ ...base, tags: ['steam'] })
+    expect(noPhoto.querySelector('[data-steam]')).not.toBeInTheDocument()
+
+    const { container: soldOut } = renderCard({ ...base, photoUrl: '/dishes/dish-01.webp', tags: ['steam'], isAvailable: false })
+    expect(soldOut.querySelector('[data-steam]')).not.toBeInTheDocument()
+  })
 })
