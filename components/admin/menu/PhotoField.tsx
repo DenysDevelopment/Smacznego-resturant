@@ -1,7 +1,7 @@
 'use client'
 import { useRef, useState, useTransition } from 'react'
 import Image from 'next/image'
-import { uploadDishPhoto } from '@/lib/menu/admin/upload'
+import { uploadDishPhoto, importImageFromUrl } from '@/lib/menu/admin/upload'
 
 const UPLOAD_ERRORS: Record<string, string> = {
   unauthorized: 'Нет доступа',
@@ -9,6 +9,13 @@ const UPLOAD_ERRORS: Record<string, string> = {
   too_large: 'Файл больше 4 МБ',
   bad_type: 'Только WEBP, JPEG или PNG',
   upload_failed: 'Не удалось загрузить',
+  bad_url: 'Некорректная ссылка',
+  fetch_failed: 'Не удалось скачать по ссылке',
+}
+
+/** External http(s) link that isn't already in our own storage bucket. */
+function isExternalUrl(v: string): boolean {
+  return /^https?:\/\//i.test(v) && !v.includes('/storage/v1/object/public/')
 }
 
 export function PhotoField({ value, onChange }: { value: string; onChange: (url: string) => void }) {
@@ -26,6 +33,18 @@ export function PhotoField({ value, onChange }: { value: string; onChange: (url:
     formData.append('file', file)
     start(async () => {
       const res = await uploadDishPhoto(formData)
+      if (!res.ok) {
+        setError(UPLOAD_ERRORS[res.error] ?? 'Ошибка загрузки')
+        return
+      }
+      onChange(res.url)
+    })
+  }
+
+  function importFromUrl() {
+    setError('')
+    start(async () => {
+      const res = await importImageFromUrl(value)
       if (!res.ok) {
         setError(UPLOAD_ERRORS[res.error] ?? 'Ошибка загрузки')
         return
@@ -66,14 +85,30 @@ export function PhotoField({ value, onChange }: { value: string; onChange: (url:
             className="hidden"
             onChange={(e) => pickFile(e.target.files?.[0])}
           />
-          <button
-            type="button"
-            disabled={pending}
-            onClick={() => fileRef.current?.click()}
-            className="rounded-full border border-line px-4 py-1.5 text-xs font-bold text-ink/70 hover:bg-ink hover:text-paper disabled:opacity-50"
-          >
-            {pending ? 'Загружаем…' : 'Загрузить файл'}
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => fileRef.current?.click()}
+              className="rounded-full border border-line px-4 py-1.5 text-xs font-bold text-ink/70 hover:bg-ink hover:text-paper disabled:opacity-50"
+            >
+              {pending ? 'Загружаем…' : 'Загрузить файл'}
+            </button>
+            {isExternalUrl(value) && (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={importFromUrl}
+                title="Скачать картинку по ссылке на наш сервер (без внешних хостов)"
+                className="rounded-full border border-beet/40 bg-beet/10 px-4 py-1.5 text-xs font-bold text-beet hover:bg-beet hover:text-paper disabled:opacity-50"
+              >
+                {pending ? 'Скачиваем…' : 'Скачать на сервер'}
+              </button>
+            )}
+          </div>
+          {isExternalUrl(value) && !error && (
+            <p className="text-xs text-muted">Внешняя ссылка. Нажмите «Скачать на сервер», чтобы не зависеть от чужого хоста.</p>
+          )}
           {error && <p className="text-xs font-semibold text-brick">{error}</p>}
         </div>
       </div>

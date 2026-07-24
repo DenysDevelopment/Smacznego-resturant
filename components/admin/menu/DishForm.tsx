@@ -30,7 +30,8 @@ export function DishForm({
   const [description, setDescription] = useState<I18nText>(initial?.description ?? {})
   const [price, setPrice] = useState(initial ? formatGroszeToZlotyInput(initial.base_price) : '')
   const [categoryId, setCategoryId] = useState(initial?.category_id ?? categories[0]?.id ?? '')
-  const [stopList, setStopList] = useState(initial ? !initial.is_available : false)
+  const [soldOut, setSoldOut] = useState(initial ? !initial.is_available : false)
+  const [hidden, setHidden] = useState(initial?.is_hidden ?? false)
   // the "steam" tag is owned by the checkbox below, so the free-text field never shows it
   const [steam, setSteam] = useState(initial?.tags.includes('steam') ?? false)
   const [tags, setTags] = useState(initial?.tags.filter((t) => t !== 'steam').join(', ') ?? '')
@@ -48,7 +49,8 @@ export function DishForm({
     !eqI18n(description, initial?.description ?? {}) ||
     (initial ? parseZlotyToGrosze(price) !== initial.base_price : price.trim() !== '') ||
     categoryId !== (initial?.category_id ?? categories[0]?.id ?? '') ||
-    stopList !== (initial ? !initial.is_available : false) ||
+    soldOut !== (initial ? !initial.is_available : false) ||
+    hidden !== (initial?.is_hidden ?? false) ||
     steam !== (initial?.tags.includes('steam') ?? false) ||
     normTags(tags) !== normTags(initial?.tags.filter((t) => t !== 'steam').join(',') ?? '') ||
     (initial ? Number(sort) !== initial.sort : sort.trim() !== '0') ||
@@ -69,23 +71,29 @@ export function DishForm({
       description,
       basePrice: grosze,
       photoUrl: photo || null,
-      isAvailable: !stopList,
+      isAvailable: !soldOut,
+      isHidden: hidden,
       tags: tagList,
       sort: sortNum,
     })
     if (!res.ok) {
-      const detail = ('field' in res && res.field && FIELD_ERRORS[res.field]) || 'не удалось сохранить'
+      const detail =
+        res.error === 'photo_import_failed'
+          ? 'не удалось скачать фото по ссылке — проверьте URL'
+          : ('field' in res && res.field && FIELD_ERRORS[res.field]) || 'не удалось сохранить'
       return { ok: false, error: `Блюдо: ${detail}` }
     }
     if (!initial) {
       router.push(`/admin/menu/${res.id}`)
       return { ok: true }
     }
-    // normalize local state so the dirty flag resets after refresh
+    // normalize local state so the dirty flag resets after refresh.
+    // photoUrl comes back from the server (an external URL is auto-imported to
+    // our storage there, so it differs from what was submitted).
     setPrice(formatGroszeToZlotyInput(grosze))
     setSort(String(sortNum))
     setTags(tagList.filter((t) => t !== 'steam').join(', '))
-    setPhotoUrl(photo)
+    setPhotoUrl(res.photoUrl ?? '')
     return { ok: true }
   }
 
@@ -126,10 +134,18 @@ export function DishForm({
         Дымок над блюдом (лёгкий пар на фото)
       </label>
 
-      <label className="flex items-center gap-2 text-sm font-semibold">
-        <input type="checkbox" checked={stopList} onChange={(e) => setStopList(e.target.checked)} className="h-4 w-4 accent-beet" />
-        Стоп-лист (скрыть из продажи)
-      </label>
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-semibold">
+          <input type="checkbox" checked={soldOut} onChange={(e) => setSoldOut(e.target.checked)} className="h-4 w-4 accent-beet" />
+          Нет в наличии
+        </label>
+        <p className="pl-6 text-xs text-muted">Блюдо остаётся на сайте с пометкой «Нет в наличии», но заказать его нельзя.</p>
+        <label className="flex items-center gap-2 text-sm font-semibold">
+          <input type="checkbox" checked={hidden} onChange={(e) => setHidden(e.target.checked)} className="h-4 w-4 accent-beet" />
+          Убрать с сайта
+        </label>
+        <p className="pl-6 text-xs text-muted">Блюдо полностью скрыто — покупатель его не видит.</p>
+      </div>
     </div>
   )
 }

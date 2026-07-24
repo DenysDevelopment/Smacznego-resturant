@@ -33,9 +33,14 @@ export function MenuGallery({ categories }: { categories: AdminCategoryGroup[] }
                       ) : (
                         <span className="flex h-full items-center justify-center text-xs text-muted">нет фото</span>
                       )}
-                      {!dish.isAvailable && (
+                      {dish.isHidden && (
+                        <span className="absolute left-2 top-2 rounded-full bg-ink/80 px-2 py-0.5 text-[11px] font-bold text-paper">
+                          Убрано с сайта
+                        </span>
+                      )}
+                      {!dish.isHidden && !dish.isAvailable && (
                         <span className="absolute left-2 top-2 rounded-full bg-brick px-2 py-0.5 text-[11px] font-bold text-paper">
-                          Стоп-лист
+                          Нет в наличии
                         </span>
                       )}
                       {dish.optionGroupCount > 0 && (

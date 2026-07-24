@@ -7,7 +7,9 @@ export async function getMenu(locale: Locale): Promise<LocalizedCategory[]> {
   const supabase = await createClient()
   const [categories, dishes, groups, options] = await Promise.all([
     supabase.from('categories').select('id, name, sort, is_visible'),
-    supabase.from('dishes').select('id, category_id, name, description, base_price, photo_url, is_available, tags, sort'),
+    // hidden dishes ("убрать с сайта") never reach the storefront; out-of-stock
+    // ones (is_available=false) still show with a "нет в наличии" badge.
+    supabase.from('dishes').select('id, category_id, name, description, base_price, photo_url, is_available, tags, sort').eq('is_hidden', false),
     supabase.from('option_groups').select('id, dish_id, name, min_select, max_select, required, sort'),
     supabase.from('options').select('id, option_group_id, name, price_delta, sort'),
   ])

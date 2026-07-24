@@ -27,7 +27,7 @@ export default async function AdminLogsPage({
   return (
     <main className="mx-auto max-w-6xl px-5 py-8">
       <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className="text-3xl font-extrabold tracking-tight">Логи заказов</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight">История заказов</h1>
         <span className="text-sm text-muted">Показано: {rows.length}{rows.length === 500 ? ' (макс.)' : ''}</span>
       </div>
       <LogFilter maxDate={warsawTodayYmd(new Date())} />

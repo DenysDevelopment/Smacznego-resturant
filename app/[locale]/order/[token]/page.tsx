@@ -11,6 +11,7 @@ import { RememberOrder } from '@/components/order/RememberOrder'
 import { RepeatOrderButton } from '@/components/order/RepeatOrderButton'
 import { orderProgress } from '@/lib/orders/progress'
 import { getFlags, flagEnabled } from '@/lib/content/flags'
+import { formatOrderAddress, type AddressParts } from '@/lib/address/types'
 import type { OrderStatus, OrderType } from '@/lib/orders/statusFlow'
 import type { CartItem, SelectedOption } from '@/lib/cart/types'
 import type { Locale } from '@/i18n/config'
@@ -133,11 +134,14 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
           {order.type === 'delivery' && order.address_snapshot != null && (
             <p className="mt-2 flex items-start gap-2 text-ink/80">
               <Icon name="pin" size={16} className="mt-0.5 shrink-0 text-beet" />
-              {(order.address_snapshot as { formatted?: string }).formatted || '—'}
+              {formatOrderAddress(order.address_snapshot as AddressParts, {
+                building: tc('building'), apartment: tc('apartment'), floor: tc('floor'), entrance: tc('entrance'), intercom: tc('intercom'),
+              }) || '—'}
             </p>
           )}
           <p className="mt-2 flex items-center gap-2 text-ink/80">
-            <Icon name="wallet" size={16} className="text-beet" />{tc('paymentCash')}
+            <Icon name={order.payment_method === 'card' ? 'card' : 'wallet'} size={16} className="text-beet" />
+            {order.payment_method === 'card' ? tc('paymentCard') : tc('paymentCash')}
           </p>
         </div>
 

@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import { formatZloty } from '@/lib/menu/price'
 import { STATUS_LABEL_RU, type OrderStatus } from '@/lib/orders/statusFlow'
 import { getOrderDetail, type OrderDetail } from '@/lib/orders/orderDetail'
+import { formatOrderAddress } from '@/lib/address/types'
+import { DeleteOrderButton } from '@/components/admin/DeleteOrderButton'
 
 const dtFmt = new Intl.DateTimeFormat('ru-RU', {
   timeZone: 'Europe/Warsaw', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false,
@@ -52,12 +54,7 @@ export function OrderDetailModal({ orderId, onClose }: { orderId: string; onClos
     return () => document.removeEventListener('keydown', onKey)
   }, [onClose])
 
-  const a = order?.address
-  const addrLines = a
-    ? [a.formatted || [a.street, a.building].filter(Boolean).join(' '),
-       a.apartment && `кв. ${a.apartment}`, a.floor && `этаж ${a.floor}`,
-       a.entrance && `подъезд ${a.entrance}`, a.intercom && `домофон ${a.intercom}`].filter(Boolean)
-    : []
+  const addr = formatOrderAddress(order?.address)
 
   const eventAt = new Map<string, string>()
   for (const e of order?.events ?? []) if (!eventAt.has(e.status)) eventAt.set(e.status, e.created_at)
@@ -119,11 +116,13 @@ export function OrderDetailModal({ orderId, onClose }: { orderId: string; onClos
               <Row label="Имя">{order.customer_name}</Row>
               <Row label="Телефон"><a href={`tel:${order.customer_phone.replace(/[^+\d]/g, '')}`} className="text-beet hover:underline">{order.customer_phone}</a></Row>
               {order.type === 'delivery' && (
-                <Row label="Адрес">{addrLines.length ? addrLines.join(', ') : '—'}</Row>
+                <Row label="Адрес">{addr || '—'}</Row>
               )}
               <Row label="Когда">{order.scheduled_for ? fmt(order.scheduled_for) : 'Как можно скорее'}</Row>
               <Row label="Оплата">
-                {order.cash_change_from ? `Наличные, сдача с ${formatZloty(order.cash_change_from, 'ru')}` : 'Наличные при получении'}
+                {order.payment_method === 'card'
+                  ? 'Картой при получении'
+                  : order.cash_change_from ? `Наличные, сдача с ${formatZloty(order.cash_change_from, 'ru')}` : 'Наличные при получении'}
               </Row>
               {order.notes && <Row label="Комментарий">{order.notes}</Row>}
             </div>
@@ -139,6 +138,12 @@ export function OrderDetailModal({ orderId, onClose }: { orderId: string; onClos
                 ))
               )}
             </div>
+          </div>
+        )}
+
+        {order && (
+          <div className="border-t border-line px-5 py-3">
+            <DeleteOrderButton orderId={order.id} onDeleted={onClose} full />
           </div>
         )}
       </div>

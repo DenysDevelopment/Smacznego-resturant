@@ -10,7 +10,7 @@ export interface PricedItem {
 
 interface DbOption { id: string; name: Record<string, string>; price_delta: number }
 interface DbGroup { id: string; options: DbOption[] }
-interface DbDish { id: string; name: Record<string, string>; base_price: number; is_available: boolean; option_groups: DbGroup[] }
+interface DbDish { id: string; name: Record<string, string>; base_price: number; is_available: boolean; is_hidden?: boolean; option_groups: DbGroup[] }
 
 type Result = { ok: true; items: PricedItem[] } | { ok: false; error: string }
 
@@ -23,7 +23,7 @@ export function revalidateItems(cart: CartItem[], dbDishes: DbDish[], locale: Lo
     if (ci.qty <= 0) return { ok: false, error: 'bad_qty' }
     const dish = byId.get(ci.dishId)
     if (!dish) return { ok: false, error: `unknown_dish:${ci.dishId}` }
-    if (!dish.is_available) return { ok: false, error: `unavailable:${ci.dishId}` }
+    if (!dish.is_available || dish.is_hidden) return { ok: false, error: `unavailable:${ci.dishId}` }
 
     const resolved: SelectedOption[] = []
     for (const so of ci.selectedOptions) {

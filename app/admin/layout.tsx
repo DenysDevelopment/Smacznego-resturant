@@ -2,6 +2,7 @@ import { display, body as bodyFont } from '@/lib/fonts'
 import { getSession } from '@/lib/auth/session'
 import { AdminNav } from '@/components/admin/AdminNav'
 import { AdminSaveProvider } from '@/components/admin/SaveBar'
+import { CenterToast } from '@/components/CenterToast'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,6 +17,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {session?.role === 'staff' && <AdminNav />}
           {children}
         </AdminSaveProvider>
+        <CenterToast />
       </body>
     </html>
   )

@@ -12,6 +12,7 @@ function dish(over: Partial<DishInput> = {}): DishInput {
     basePrice: 2400,
     photoUrl: null,
     isAvailable: true,
+    isHidden: false,
     tags: [],
     sort: 0,
     ...over,
